@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Header = () => {
   return (
     <HeaderBox>
-      <p>Tareas de hoy</p>
+      <p>Mi día</p>
       <p>Agregar tareas</p>
     </HeaderBox>
   );

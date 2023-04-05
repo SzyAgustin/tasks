@@ -1,7 +1,7 @@
 import React from 'react';
-import { ITask } from '../interfaces/ITask';
 import Task from './Task';
 import styled from 'styled-components';
+import { ITask } from '../services/TaskService';
 
 interface Props {
   title: string;

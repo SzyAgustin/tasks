@@ -1,19 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Section from './components/Section';
-import { ITask } from './interfaces/ITask';
 import Header from './components/Header';
+import { ITask, getTasks } from './services/TaskService';
+import { getDocs } from 'firebase/firestore';
 
 function App() {
-  const [todayTasks, setTodayTasks] = useState<ITask[]>([
-    { id: 1, title: 'Primera tarea', done: false },
-    { id: 2, title: 'Segunda tarea', done: true },
-  ]);
+  const [todayTasks, setTodayTasks] = useState<ITask[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  console.log(todayTasks);
+
+  useEffect(() => {
+    setLoading(true);
+    const query = getTasks();
+    getDocs(query).then((querySnapshot) => {
+      setTodayTasks(
+        querySnapshot.docs.map((doc) => {
+          return { id: doc.id, ...doc.data() } as ITask;
+        })
+      );
+      setLoading(false);
+    });
+  }, []);
 
   return (
-    <div>
+    <>
       <Header />
       <Section title={'Tareas del día'} tasks={todayTasks} />
-    </div>
+    </>
   );
 }
 
