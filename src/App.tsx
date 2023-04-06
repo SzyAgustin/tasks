@@ -6,12 +6,10 @@ import { getDocs } from 'firebase/firestore';
 
 function App() {
   const [todayTasks, setTodayTasks] = useState<ITask[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  console.log(todayTasks);
+  const [loadingTasks, setLoadingTasks] = useState<boolean>(false);
 
   useEffect(() => {
-    setLoading(true);
+    setLoadingTasks(true);
     const query = getTasks();
     getDocs(query).then((querySnapshot) => {
       setTodayTasks(
@@ -19,14 +17,19 @@ function App() {
           return { id: doc.id, ...doc.data() } as ITask;
         })
       );
-      setLoading(false);
+      setLoadingTasks(false);
     });
   }, []);
 
   return (
     <>
       <Header />
-      <Section title={'Tareas del día'} tasks={todayTasks} />
+      <Section
+        title={'Tareas del día'}
+        tasks={todayTasks}
+        loadingTasks={loadingTasks}
+        setTodayTasks={setTodayTasks}
+      />
     </>
   );
 }

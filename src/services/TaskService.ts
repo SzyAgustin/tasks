@@ -24,22 +24,24 @@ export interface ITask extends ILocalTask {
   id: string;
 }
 
+const TaskList = "Task";
+
 export const getTasks = () => {
   // return category ? query(collection(db, "tasks"), where("category", "==", category), where("stock", "!=", 0)) : query(collection(db, "ItemList"), where("stock", "!=", 0));
-  return query(collection(db, "Task"));
+  return query(collection(db, TaskList));
 }
 
 export const getTaskList = () => {
-  return collection(db, "Task");
+  return collection(db, TaskList);
 }
 
-export const addTask = (item: ILocalTask) => {
-  const itemList = getTaskList();
-  return addDoc(itemList, item);
+export const addTask = (task: ILocalTask) => {
+  const taskList = getTaskList();
+  return addDoc(taskList, task);
 }
 
 export const getTask = (itemId: string) => {
-  return doc(db, "ItemList", itemId);
+  return doc(db, TaskList, itemId);
 }
 
 // export const updateStock = async (cartItems: IItemCart[]) => {
