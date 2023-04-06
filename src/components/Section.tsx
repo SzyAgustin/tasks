@@ -39,7 +39,7 @@ export default Section;
 
 const SectionBox = styled.div`
   width: 80%;
-  margin: 10px auto 0 auto;
+  margin: 45px auto 0 auto;
 `;
 
 const TasksBox = styled.div`

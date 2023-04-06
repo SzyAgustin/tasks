@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import Switch from 'react-switch';
 import { ITask, getTask } from '../services/TaskService';
 import { updateDoc } from 'firebase/firestore';
+import { AppContext } from '../context/AppContext';
 
 interface Props {
   id: string;
@@ -13,6 +14,7 @@ interface Props {
 }
 
 const Task = ({ id, title, done, todayTasks, setTodayTasks }: Props) => {
+  const { darkMode } = useContext(AppContext);
   const [loadingTaskChange, setLoadingTaskChange] = useState<boolean>(false);
 
   const setTask = (id: string, value: boolean) => {
@@ -36,7 +38,7 @@ const Task = ({ id, title, done, todayTasks, setTodayTasks }: Props) => {
   };
 
   return (
-    <TaskBox>
+    <TaskBox darkMode={darkMode}>
       <p>{title}</p>
       <Switch
         onChange={() => setTask(id, !done)}
@@ -50,11 +52,16 @@ const Task = ({ id, title, done, todayTasks, setTodayTasks }: Props) => {
 
 export default Task;
 
-const TaskBox = styled.div`
+interface TaskBoxProps {
+  darkMode: boolean;
+}
+
+const TaskBox = styled.div<TaskBoxProps>`
+  transition: 0.4s;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #ffffff22;
+  background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
   padding: 0.5em 1em;
   border-radius: 3px;
   margin-bottom: 1em;

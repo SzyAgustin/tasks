@@ -1,14 +1,18 @@
 import React from 'react';
 import { Vortex } from 'react-loader-spinner';
-import styled from 'styled-components';
+import { FlexCenterBox } from './FlexCenterBox';
 
-const Loading = () => {
+interface LoadingProps {
+  size?: string;
+}
+
+const Loading = ({ size }: LoadingProps) => {
   return (
-    <LoadingBox>
+    <FlexCenterBox>
       <Vortex
         visible
-        height='80'
-        width='80'
+        height={size ? size : '80'}
+        width={size ? size : '80'}
         ariaLabel='vortex-loading'
         wrapperStyle={{}}
         wrapperClass='vortex-wrapper'
@@ -21,14 +25,8 @@ const Loading = () => {
           '#00bad3',
         ]}
       />
-    </LoadingBox>
+    </FlexCenterBox>
   );
 };
 
 export default Loading;
-
-const LoadingBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
