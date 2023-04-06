@@ -1,32 +1,23 @@
-import React from 'react';
-import Task from './Task';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { ITask } from '../services/TaskService';
 import Loading from './Loading';
 import AddTaskButton from './AddTaskButton';
 import TaskList from './TaskList';
+import { AppContext } from '../context/AppContext';
 
 interface Props {
   title: string;
-  tasks: ITask[];
-  loadingTasks: boolean;
-  setTodayTasks: (x: ITask[]) => void;
 }
 
-const Section = ({ title, tasks, loadingTasks, setTodayTasks }: Props) => {
+const Section = ({ title }: Props) => {
+  const { loadingTasks } = useContext(AppContext);
   return (
     <SectionBox>
       <TitleBox>
         <h2>{title}</h2>
         <AddTaskButton />
       </TitleBox>
-      <TasksBox>
-        {loadingTasks ? (
-          <Loading />
-        ) : (
-          <TaskList tasks={tasks} setTodayTasks={setTodayTasks} />
-        )}
-      </TasksBox>
+      <TasksBox>{loadingTasks ? <Loading /> : <TaskList />}</TasksBox>
     </SectionBox>
   );
 };
@@ -42,6 +33,7 @@ const TitleBox = styled.div`
 const SectionBox = styled.div`
   width: 80%;
   margin: 45px auto 0 auto;
+  padding-bottom: 70px;
 `;
 
 const TasksBox = styled.div`

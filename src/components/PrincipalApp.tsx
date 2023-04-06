@@ -8,32 +8,16 @@ import { AppContext } from '../context/AppContext';
 import styled from 'styled-components';
 
 const PrincipalApp = () => {
-  const [todayTasks, setTodayTasks] = useState<ITask[]>([]);
-  const [loadingTasks, setLoadingTasks] = useState<boolean>(false);
-  const { darkMode } = useContext(AppContext);
+  const { darkMode, getAllTasks } = useContext(AppContext);
 
   useEffect(() => {
-    setLoadingTasks(true);
-    const query = getTasks();
-    getDocs(query).then((querySnapshot) => {
-      setTodayTasks(
-        querySnapshot.docs.map((doc) => {
-          return { id: doc.id, ...doc.data() } as ITask;
-        })
-      );
-      setLoadingTasks(false);
-    });
+    getAllTasks();
   }, []);
   return (
     <Box>
       <AppBox darkMode={darkMode}>
         <Header />
-        <Section
-          title='Tareas del día'
-          tasks={todayTasks}
-          loadingTasks={loadingTasks}
-          setTodayTasks={setTodayTasks}
-        />
+        <Section title='Tareas del día' />
         <DarkMode />
       </AppBox>
     </Box>
@@ -57,4 +41,5 @@ const AppBox = styled.div<AppBoxProps>`
   color: ${(p) => (p.darkMode ? 'white' : '#04224e')};
   width: 100%;
   height: 100%;
+  overflow-y: scroll;
 `;

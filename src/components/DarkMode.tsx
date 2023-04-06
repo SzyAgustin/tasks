@@ -24,7 +24,7 @@ export default DarkMode;
 
 const DarkModeBox = styled(FlexCenterBox)`
   position: absolute;
-  left: 20px;
+  right: 30px;
   bottom: 20px;
 `;
 

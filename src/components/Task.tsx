@@ -1,21 +1,21 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, MouseEventHandler } from 'react';
 import styled from 'styled-components';
 import Switch from 'react-switch';
-import { ITask, getTask } from '../services/TaskService';
+import { getTask } from '../services/TaskService';
 import { updateDoc } from 'firebase/firestore';
 import { AppContext } from '../context/AppContext';
+import TaskAddEdit from './TaskAddEdit';
 
 interface Props {
   id: string;
   title: string;
   done: boolean;
-  todayTasks: ITask[];
-  setTodayTasks: (x: ITask[]) => void;
 }
 
-const Task = ({ id, title, done, todayTasks, setTodayTasks }: Props) => {
-  const { darkMode } = useContext(AppContext);
+const Task = ({ id, title, done }: Props) => {
+  const { darkMode, todayTasks, setTodayTasks } = useContext(AppContext);
   const [loadingTaskChange, setLoadingTaskChange] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState<boolean>(false);
 
   const setTask = (id: string, value: boolean) => {
     setLoadingTaskChange(true);
@@ -37,16 +37,32 @@ const Task = ({ id, title, done, todayTasks, setTodayTasks }: Props) => {
       });
   };
 
+  const handleClick = (e: any) => {
+    if (e.detail === 2) {
+      setEditMode(true);
+    }
+  };
+
   return (
-    <TaskBox darkMode={darkMode}>
-      <p>{title}</p>
-      <Switch
-        onChange={() => setTask(id, !done)}
-        checked={done}
-        onColor='#00d75d'
-        disabled={loadingTaskChange}
-      />
-    </TaskBox>
+    <>
+      {!editMode ? (
+        <TaskBox darkMode={darkMode} onClick={handleClick}>
+          <p>{title}</p>
+          <Switch
+            onChange={() => setTask(id, !done)}
+            checked={done}
+            onColor='#00d75d'
+            disabled={loadingTaskChange}
+          />
+        </TaskBox>
+      ) : (
+        <TaskAddEdit
+          title={title}
+          id={id}
+          notEditMode={() => setEditMode(false)}
+        />
+      )}
+    </>
   );
 };
 
@@ -64,4 +80,5 @@ export const TaskBox = styled.div<TaskBoxProps>`
   padding: 0.5em 1em;
   border-radius: 3px;
   margin-bottom: 1em;
+  user-select: none;
 `;
