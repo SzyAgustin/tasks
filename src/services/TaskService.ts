@@ -40,8 +40,8 @@ export const addTask = (task: ILocalTask) => {
   return addDoc(taskList, task);
 }
 
-export const getTask = (itemId: string) => {
-  return doc(db, TaskList, itemId);
+export const getTask = (taskId: string) => {
+  return doc(db, TaskList, taskId);
 }
 
 // export const updateStock = async (cartItems: IItemCart[]) => {

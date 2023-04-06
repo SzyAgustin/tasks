@@ -41,7 +41,11 @@ const TaskAddEdit = ({ title, id, notEditMode }: TaskAddEditProps) => {
       });
   };
 
-  const handleAdd = (newTask: ILocalTask) => {
+  const handleAdd = () => {
+    const newTask: ILocalTask = {
+      title: value,
+      done: false,
+    };
     addTask(newTask)
       .then((res) => {
         console.log(res);
@@ -59,14 +63,10 @@ const TaskAddEdit = ({ title, id, notEditMode }: TaskAddEditProps) => {
 
   const handleAddEdit = () => {
     setLoading(true);
-    const newTask: ILocalTask = {
-      title: value,
-      done: false,
-    };
     if (id) {
       handleEdit(id);
     } else {
-      handleAdd(newTask);
+      handleAdd();
     }
   };
 
@@ -83,7 +83,7 @@ const TaskAddEdit = ({ title, id, notEditMode }: TaskAddEditProps) => {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         type='text'
-        placeholder='Nombre de la tarea...'
+        placeholder='Nombre de la nueva tarea...'
         autoFocus
       ></Input>
       <AddButton
@@ -131,6 +131,7 @@ const Input = styled.input<InputProps>`
   border: 0px;
   color: ${(p) => (p.darkMode ? 'white' : 'rgb(4, 34, 78)')};
   font-style: oblique;
+  font-weight: 700;
 
   &:focus-visible {
     border: transparent;

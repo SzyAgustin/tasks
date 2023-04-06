@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
-import { ITask, getTasks } from '../services/TaskService';
-import { getDocs } from 'firebase/firestore';
+import { ITask, getTask, getTasks } from '../services/TaskService';
+import { deleteDoc, getDocs } from 'firebase/firestore';
 
 interface IAppState {
   darkMode: boolean;
@@ -12,6 +12,7 @@ interface IAppState {
   isAddingTask: boolean;
   setIsAddingTask: (x: boolean) => void;
   getAllTasks: () => void;
+  handleDelete: (id: string) => void;
 }
 
 const initialState: IAppState = {
@@ -24,6 +25,7 @@ const initialState: IAppState = {
   getAllTasks: () => {},
   todayTasks: [],
   setTodayTasks: () => {},
+  handleDelete: () => {},
 };
 
 interface AppProviderProps {
@@ -37,6 +39,16 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [isAddingTask, setIsAddingTask] = useState<boolean>(false);
   const [todayTasks, setTodayTasks] = useState<ITask[]>([]);
   const [loadingTasks, setLoadingTasks] = useState<boolean>(false);
+
+  const handleDelete = (id: string) => {
+    deleteDoc(getTask(id))
+      .then(() => {
+        setTodayTasks(todayTasks.filter((task) => task.id !== id));
+      })
+      .catch((err) => {
+        console.log(err); //Todo: manejar error
+      });
+  };
 
   const getAllTasks = () => {
     setLoadingTasks(true);
@@ -63,6 +75,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setTodayTasks,
         loadingTasks,
         setLoadingTasks,
+        handleDelete,
       }}
     >
       {children}

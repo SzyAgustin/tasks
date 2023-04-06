@@ -5,6 +5,7 @@ import { getTask } from '../services/TaskService';
 import { updateDoc } from 'firebase/firestore';
 import { AppContext } from '../context/AppContext';
 import TaskAddEdit from './TaskAddEdit';
+import { FlexCenterBox } from './FlexCenterBox';
 
 interface Props {
   id: string;
@@ -13,7 +14,8 @@ interface Props {
 }
 
 const Task = ({ id, title, done }: Props) => {
-  const { darkMode, todayTasks, setTodayTasks } = useContext(AppContext);
+  const { darkMode, todayTasks, setTodayTasks, handleDelete } =
+    useContext(AppContext);
   const [loadingTaskChange, setLoadingTaskChange] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
 
@@ -47,7 +49,11 @@ const Task = ({ id, title, done }: Props) => {
     <>
       {!editMode ? (
         <TaskBox darkMode={darkMode} onClick={handleClick}>
-          <p>{title}</p>
+          <FlexCenterBox>
+            <DeleteButton onClick={() => handleDelete(id)}>x</DeleteButton>
+            <Divider>|</Divider>
+            <Title>{title}</Title>
+          </FlexCenterBox>
           <Switch
             onChange={() => setTask(id, !done)}
             checked={done}
@@ -81,4 +87,27 @@ export const TaskBox = styled.div<TaskBoxProps>`
   border-radius: 3px;
   margin-bottom: 1em;
   user-select: none;
+`;
+
+const Divider = styled.p`
+  margin-bottom: 3.5px;
+`;
+
+const Title = styled.p`
+  margin-bottom: 1.2px;
+  margin-left: 5px;
+`;
+
+const DeleteButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0px;
+  border-radius: 4px;
+  margin-right: 5px;
+  background-color: #da0c0c;
+  color: white;
+  padding: 2px 7px;
+  font-size: 16px;
+  cursor: pointer;
 `;
