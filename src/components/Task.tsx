@@ -56,8 +56,7 @@ interface TaskBoxProps {
   darkMode: boolean;
 }
 
-const TaskBox = styled.div<TaskBoxProps>`
-  transition: 0.4s;
+export const TaskBox = styled.div<TaskBoxProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;

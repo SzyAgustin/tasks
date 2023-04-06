@@ -1,8 +1,10 @@
 import React from 'react';
 import Task from './Task';
 import styled from 'styled-components';
-import { ILocalTask, ITask } from '../services/TaskService';
+import { ITask } from '../services/TaskService';
 import Loading from './Loading';
+import AddTaskButton from './AddTaskButton';
+import TaskList from './TaskList';
 
 interface Props {
   title: string;
@@ -14,21 +16,15 @@ interface Props {
 const Section = ({ title, tasks, loadingTasks, setTodayTasks }: Props) => {
   return (
     <SectionBox>
-      <h2>{title}</h2>
+      <TitleBox>
+        <h2>{title}</h2>
+        <AddTaskButton />
+      </TitleBox>
       <TasksBox>
         {loadingTasks ? (
           <Loading />
         ) : (
-          tasks.map((task) => (
-            <Task
-              key={task.id}
-              id={task.id}
-              title={task.title}
-              done={task.done}
-              setTodayTasks={setTodayTasks}
-              todayTasks={tasks}
-            />
-          ))
+          <TaskList tasks={tasks} setTodayTasks={setTodayTasks} />
         )}
       </TasksBox>
     </SectionBox>
@@ -36,6 +32,12 @@ const Section = ({ title, tasks, loadingTasks, setTodayTasks }: Props) => {
 };
 
 export default Section;
+
+const TitleBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
 
 const SectionBox = styled.div`
   width: 80%;
