@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { TaskBox } from './Task';
 import { AppContext } from '../context/AppContext';
 import styled from 'styled-components';
-import { ILocalTask, ITask, addTask, getTask } from '../services/TaskService';
+import { ILocalTask, addTask, getTask } from '../services/TaskService';
 import { updateDoc } from 'firebase/firestore';
 
 interface TaskAddEditProps {

@@ -1,6 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { ITask, getTasks } from '../services/TaskService';
-import { getDocs } from 'firebase/firestore';
+import React, { useContext, useEffect } from 'react';
 import Header from './Header';
 import Section from './Section';
 import DarkMode from './DarkMode';

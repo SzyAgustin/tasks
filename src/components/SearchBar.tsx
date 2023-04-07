@@ -4,7 +4,6 @@ import { TaskBox } from './Task';
 import { AppContext } from '../context/AppContext';
 import { BiSearch } from 'react-icons/bi';
 import { IoMdClose } from 'react-icons/io';
-import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import TransitionIcons from './TransitionIcons';
 
 const SearchBar = () => {

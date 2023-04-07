@@ -1,18 +1,38 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { AppContext } from '../context/AppContext';
+import Modal from 'react-modal';
 
 const AddTaskButton = () => {
   const { darkMode, isAddingTask, setIsAddingTask } = useContext(AppContext);
 
-  const handleClick = () => {
-    setIsAddingTask(!isAddingTask);
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+    overlay: {
+      background: '#00000088',
+    },
   };
 
   return (
-    <AddButton darkMode={darkMode} onClick={handleClick}>
-      {isAddingTask ? '-' : '+'}
-    </AddButton>
+    <>
+      <AddButton darkMode={darkMode} onClick={() => setIsAddingTask(true)}>
+        {isAddingTask ? '-' : '+'}
+      </AddButton>
+      <Modal
+        isOpen={isAddingTask}
+        onRequestClose={() => setIsAddingTask(false)}
+        style={customStyles}
+      >
+        dfasdfg
+      </Modal>
+    </>
   );
 };
 
