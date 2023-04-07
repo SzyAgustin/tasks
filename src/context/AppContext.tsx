@@ -5,6 +5,8 @@ import { deleteDoc, getDocs } from 'firebase/firestore';
 interface IAppState {
   darkMode: boolean;
   setDarkMode: (x: boolean) => void;
+  searchValue: string;
+  setSearchValue: (x: string) => void;
   loadingTasks: boolean;
   setLoadingTasks: (x: boolean) => void;
   todayTasks: ITask[];
@@ -26,6 +28,8 @@ const initialState: IAppState = {
   todayTasks: [],
   setTodayTasks: () => {},
   handleDelete: () => {},
+  searchValue: '',
+  setSearchValue: (x: string) => {},
 };
 
 interface AppProviderProps {
@@ -39,6 +43,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [isAddingTask, setIsAddingTask] = useState<boolean>(false);
   const [todayTasks, setTodayTasks] = useState<ITask[]>([]);
   const [loadingTasks, setLoadingTasks] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>('');
+
+  const todayTasksFiltered = searchValue
+    ? todayTasks.filter((task) =>
+        task.title.toLowerCase().includes(searchValue.toLowerCase())
+      )
+    : todayTasks;
 
   const handleDelete = (id: string) => {
     deleteDoc(getTask(id))
@@ -71,11 +82,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         isAddingTask,
         setIsAddingTask,
         getAllTasks,
-        todayTasks,
+        todayTasks: todayTasksFiltered,
         setTodayTasks,
         loadingTasks,
         setLoadingTasks,
         handleDelete,
+        searchValue,
+        setSearchValue,
       }}
     >
       {children}

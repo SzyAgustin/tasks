@@ -5,7 +5,6 @@ import { getTask } from '../services/TaskService';
 import { updateDoc } from 'firebase/firestore';
 import { AppContext } from '../context/AppContext';
 import TaskAddEdit from './TaskAddEdit';
-import { FlexCenterBox } from './FlexCenterBox';
 
 interface Props {
   id: string;
@@ -46,29 +45,15 @@ const Task = ({ id, title, done }: Props) => {
   };
 
   return (
-    <>
-      {!editMode ? (
-        <TaskBox darkMode={darkMode} onClick={handleClick}>
-          <FlexCenterBox>
-            <DeleteButton onClick={() => handleDelete(id)}>x</DeleteButton>
-            <Divider>|</Divider>
-            <Title>{title}</Title>
-          </FlexCenterBox>
-          <Switch
-            onChange={() => setTask(id, !done)}
-            checked={done}
-            onColor='#00d75d'
-            disabled={loadingTaskChange}
-          />
-        </TaskBox>
-      ) : (
-        <TaskAddEdit
-          title={title}
-          id={id}
-          notEditMode={() => setEditMode(false)}
-        />
-      )}
-    </>
+    <TaskBox darkMode={darkMode} onClick={handleClick}>
+      <p>{title}</p>
+      <Switch
+        onChange={() => setTask(id, !done)}
+        checked={done}
+        onColor='#00d75d'
+        disabled={loadingTaskChange}
+      />
+    </TaskBox>
   );
 };
 
@@ -87,27 +72,4 @@ export const TaskBox = styled.div<TaskBoxProps>`
   border-radius: 3px;
   margin-bottom: 1em;
   user-select: none;
-`;
-
-const Divider = styled.p`
-  margin-bottom: 3.5px;
-`;
-
-const Title = styled.p`
-  margin-bottom: 1.2px;
-  margin-left: 5px;
-`;
-
-const DeleteButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 0px;
-  border-radius: 4px;
-  margin-right: 5px;
-  background-color: #da0c0c;
-  color: white;
-  padding: 2px 7px;
-  font-size: 16px;
-  cursor: pointer;
 `;

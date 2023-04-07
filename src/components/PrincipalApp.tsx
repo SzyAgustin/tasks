@@ -6,6 +6,7 @@ import Section from './Section';
 import DarkMode from './DarkMode';
 import { AppContext } from '../context/AppContext';
 import styled from 'styled-components';
+import SearchBar from './SearchBar';
 
 const PrincipalApp = () => {
   const { darkMode, getAllTasks } = useContext(AppContext);
@@ -17,6 +18,7 @@ const PrincipalApp = () => {
     <Box>
       <AppBox darkMode={darkMode}>
         <Header />
+        <SearchBar />
         <Section title='Tareas del día' />
         <DarkMode />
       </AppBox>

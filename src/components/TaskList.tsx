@@ -8,8 +8,7 @@ const TaskList = () => {
   const { isAddingTask, todayTasks } = useContext(AppContext);
   return (
     <>
-      {isAddingTask && <TaskAddEdit />}
-      {!isAddingTask && todayTasks.length === 0 && (
+      {todayTasks.length === 0 && (
         <FlexCenterBox>
           Aún no tienes tareas para el dia de hoy. Agrega una!
         </FlexCenterBox>

@@ -32,7 +32,7 @@ const TitleBox = styled.div`
 
 const SectionBox = styled.div`
   width: 80%;
-  margin: 45px auto 0 auto;
+  margin: 0 auto;
   padding-bottom: 70px;
 `;
 
