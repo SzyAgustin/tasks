@@ -11,7 +11,7 @@
 // const arr = [producto1, producto2, producto3, producto4, producto5, producto6, producto7, producto8, producto9];
 
 import { db } from "./Firebase";
-import { collection, doc, query, where, Timestamp, writeBatch, addDoc } from "firebase/firestore";
+import { collection, doc, query, where, Timestamp, writeBatch, addDoc, getDocs, deleteDoc } from "firebase/firestore";
 // import { IItemCart } from "../context/CartContext";
 
 
@@ -19,6 +19,7 @@ export interface ILocalTask {
   title: string;
   done: boolean;
   description?: string;
+  isPeriodic?: boolean;
 }
 
 export interface ITask extends ILocalTask {
@@ -29,7 +30,11 @@ const TaskList = "Task";
 
 export const getTasks = () => {
   // return category ? query(collection(db, "tasks"), where("category", "==", category), where("stock", "!=", 0)) : query(collection(db, "ItemList"), where("stock", "!=", 0));
-  return query(collection(db, TaskList));
+  return query(collection(db, TaskList)); //TODO: add where clause for userID when it is done
+}
+
+export const getDoneTasks = () => {
+  return query(collection(db, TaskList), where("done", "==", true)); //TODO: add where clause for userID when it is done
 }
 
 export const getTaskList = () => {
@@ -45,13 +50,12 @@ export const getTask = (taskId: string) => {
   return doc(db, TaskList, taskId);
 }
 
-// export const updateStock = async (cartItems: IItemCart[]) => {
-//   const batch = writeBatch(db);
-//   cartItems.forEach((item) => {
-//     batch.update(
-//       getItem(item.id),
-//       { 'stock': item.stock - item.amount }
-//     );
-//   });
-//   await batch.commit();
-// };
+export const cleanDoneTasks = async () => {
+  const batch = writeBatch(db);
+  var doneTasksQuery = getDoneTasks();
+  const doneTasksSnap = await getDocs(doneTasksQuery);
+  doneTasksSnap.docs.map(task => task.data().isPeriodic ?
+    batch.update(getTask(task.id), { 'done': false })
+    : batch.delete(getTask(task.id)))
+  await batch.commit();
+}

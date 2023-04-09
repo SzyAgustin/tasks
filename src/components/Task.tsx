@@ -1,17 +1,17 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import Switch from 'react-switch';
-import { getTask } from '../services/TaskService';
+import { ITask, getTask } from '../services/TaskService';
 import { updateDoc } from 'firebase/firestore';
 import { AppContext } from '../context/AppContext';
+import { RiRepeatFill } from 'react-icons/ri';
 
-interface Props {
-  id: string;
-  title: string;
-  done: boolean;
+interface TaskProps {
+  task: ITask;
 }
 
-const Task = ({ id, title, done }: Props) => {
+const Task = ({ task }: TaskProps) => {
+  const { id, title, done, isPeriodic } = task;
   const {
     darkMode,
     todayTasks,
@@ -49,7 +49,7 @@ const Task = ({ id, title, done }: Props) => {
   return (
     <TaskBox darkMode={darkMode}>
       <p style={{ width: '90%' }} onClick={handleClick}>
-        {title}
+        {title} {isPeriodic && <StyledRiRepeatFill />}
       </p>
       <Switch
         onChange={() => setTask(id, !done)}
@@ -83,4 +83,8 @@ export const TaskBox = styled.div<TaskBoxProps>`
     box-shadow: 0px 0px 5px 0px
       ${(p) => (p.darkMode ? '#ffffffcb' : '#006baee4')};
   }
+`;
+
+const StyledRiRepeatFill = styled(RiRepeatFill)`
+  margin-bottom: -3px;
 `;

@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { ILocalTask, addTask, getTask } from '../services/TaskService';
 import { deleteDoc, updateDoc } from 'firebase/firestore';
 import ModalButton from './ModalButton';
+import CheckBox from './form/CheckBox';
 
 const AddEditTaskModal = () => {
   const {
@@ -113,6 +114,7 @@ const AddEditTaskModal = () => {
     title: taskToEdit?.title || '',
     description: taskToEdit?.description || '',
     done: taskToEdit?.done || false,
+    isPeriodic: taskToEdit?.isPeriodic || false,
   };
 
   const validationSchema = Yup.object({
@@ -137,12 +139,10 @@ const AddEditTaskModal = () => {
           >
             {(formik) => (
               <Form>
-                <Input name='title' label='Titulo' darkMode={darkMode} />
-                <Input
-                  name='description'
-                  label='Descripcion'
-                  darkMode={darkMode}
-                />
+                <Input name='title' label='Titulo' />
+                <Input name='description' label='Descripcion' />
+                {taskToEdit && <CheckBox name='done' label='Completada' />}
+                <CheckBox name='isPeriodic' label='Es periodica?' />
                 <FormFooter darkMode={darkMode}>
                   <ModalButton loading={loading} success={success} />
                   {taskToEdit && (

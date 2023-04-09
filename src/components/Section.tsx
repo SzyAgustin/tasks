@@ -10,11 +10,15 @@ interface Props {
 }
 
 const Section = ({ title }: Props) => {
-  const { loadingTasks } = useContext(AppContext);
+  const { loadingTasks, todayTasks } = useContext(AppContext);
+  const amountOfDone = todayTasks.filter((task) => task.done).length;
+  const amountOfTasks = todayTasks.length;
   return (
     <SectionBox>
       <TitleBox>
-        <h2>{title}</h2>
+        <h2>
+          {title} {!loadingTasks && `(${amountOfDone} de ${amountOfTasks})`}
+        </h2>
         <AddTaskButton />
       </TitleBox>
       <TasksBox>{loadingTasks ? <Loading /> : <TaskList />}</TasksBox>

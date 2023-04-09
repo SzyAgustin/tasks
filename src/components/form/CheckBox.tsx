@@ -1,54 +1,50 @@
 import React, { useContext } from 'react';
-import { Field, ErrorMessage } from 'formik';
+import { Field, ErrorMessage, FieldProps } from 'formik';
 import TextError from './TextError';
 import styled from 'styled-components';
 import { AppContext } from '../../context/AppContext';
-interface InputProps {
+import Switch from 'react-switch';
+
+interface CheckBoxProps {
   label: string;
   name: string;
   [x: string]: any;
 }
 
-const Input = ({ label, name, ...rest }: InputProps) => {
+const CheckBox = ({ label, name, ...rest }: CheckBoxProps) => {
   const { darkMode } = useContext(AppContext);
   return (
-    <InputDiv>
+    <CheckBoxDiv>
       <StyledLabel htmlFor={name}>{label}</StyledLabel>
-      <StyledField
+      <Field
+        type='checkbox'
         id={name}
         name={name}
         darkMode={darkMode}
+        render={({ field, form }: FieldProps) => (
+          <Switch
+            {...field}
+            onChange={(val) => form.setFieldValue(name, val)}
+            checked={field.value}
+            onColor='#00d75d'
+          />
+        )}
         {...rest}
-      ></StyledField>
+      ></Field>
       <ErrorMessage name={name}>
         {(error) => <TextError>{error}</TextError>}
       </ErrorMessage>
-    </InputDiv>
+    </CheckBoxDiv>
   );
 };
 
-export default Input;
+export default CheckBox;
 
-const InputDiv = styled.div`
+const CheckBoxDiv = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
   min-height: 75px;
-`;
-
-const StyledField = styled(Field)<InputProps>`
-  background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
-  padding: 0.5em 1em;
-  border-radius: 3px;
-  margin-bottom: 1em;
-  user-select: none;
-  border: none;
-  font-size: 16px;
-  color: ${(p) => (p.darkMode ? 'white' : 'black')};
-
-  &:focus-visible {
-    outline: none;
-  }
 `;
 
 const StyledLabel = styled.label`

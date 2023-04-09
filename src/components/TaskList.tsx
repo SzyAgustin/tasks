@@ -15,7 +15,7 @@ const TaskList = () => {
         </FlexCenterBox>
       )}
       {todayTasks.map((task) => (
-        <Task key={task.id} id={task.id} title={task.title} done={task.done} />
+        <Task key={task.id} task={task} />
       ))}
     </>
   );

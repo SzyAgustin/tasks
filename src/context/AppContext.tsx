@@ -1,6 +1,14 @@
 import React, { createContext, useState } from 'react';
-import { ITask, getTasks } from '../services/TaskService';
-import { getDocs } from 'firebase/firestore';
+import { ITask, cleanDoneTasks, getTasks } from '../services/TaskService';
+import {
+  DocumentData,
+  DocumentReference,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
+import { getLastExecution } from '../services/FirstExecutionService';
 
 interface IAppState {
   darkMode: boolean;
@@ -64,23 +72,57 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   };
 
   const getOrderedTasks = () => {
-    todayTasks.sort((a, b) => (a.id < b.id ? -1 : 1)); //TODO: change this and create way to customize ordering the tasks
-    const doneTasks = todayTasks.filter((task) => task.done);
-    const undoneTasks = todayTasks.filter((task) => !task.done);
+    todayTasks.sort((a, b) => (a.title < b.title ? -1 : 1)); //TODO: change this and create way to customize ordering the tasks
+    // const doneTasks = todayTasks.filter((task) => task.done);
+    // const undoneTasks = todayTasks.filter((task) => !task.done);
 
-    const tasks = undoneTasks.concat(doneTasks);
+    // const tasks = undoneTasks.concat(doneTasks);
 
     const orderedTasksSearched = searchValue
-      ? tasks.filter((task) =>
+      ? todayTasks.filter((task) =>
           task.title.toLowerCase().includes(searchValue.toLowerCase())
         )
-      : tasks;
+      : todayTasks;
 
     return orderedTasksSearched;
   };
 
-  const getAllTasks = () => {
+  const getTodaysDate = () => {
+    const date = new Date();
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  };
+
+  const dailyFirstExecutionCleanUp = async () => {
+    const lastExecutionRef = getLastExecution('1'); //TODO: Send userid
+    const lastExecutionSnap = await getDoc(lastExecutionRef);
+
+    if (
+      lastExecutionSnap.exists() &&
+      lastExecutionSnap.data().lastExecution !== getTodaysDate()
+    ) {
+      await cleanDoneTasks();
+    }
+    setLastExecution(lastExecutionRef);
+  };
+
+  const setLastExecution = (
+    lastExecutionRef: DocumentReference<DocumentData>
+  ) => {
+    setDoc(lastExecutionRef, {
+      lastExecution: getTodaysDate(),
+      userId: '1', //TODO, change this when authentication is developed
+    })
+      .then((res) => {
+        console.log('res', res);
+      })
+      .catch((err) => {
+        console.log('err', err); //TODO: agregar toaster para mostrar este error
+      });
+  };
+
+  const getAllTasks = async () => {
     setLoadingTasks(true);
+    await dailyFirstExecutionCleanUp();
     const query = getTasks();
     getDocs(query).then((querySnapshot) => {
       setTodayTasks(
