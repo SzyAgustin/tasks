@@ -1,16 +1,17 @@
 .fade-enter{
-    opacity: 0;
+    opacity: 0.2;
+    rotate: 180deg;
  }
  .fade-exit{
     opacity: 1;
  }
  .fade-enter-active{
-    opacity: 1;
+    opacity: 1; 
+    rotate: 0deg;
+    transition: 300ms ease-out;
  }
  .fade-exit-active{
-    opacity: 0;
- }
- .fade-enter-active,
- .fade-exit-active{
-    transition: opacity 100ms;
+    opacity: 0.2;
+    rotate: -180deg;
+    transition: 300ms ease-in;
  }

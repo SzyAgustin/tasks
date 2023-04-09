@@ -18,6 +18,7 @@ import { collection, doc, query, where, Timestamp, writeBatch, addDoc } from "fi
 export interface ILocalTask {
   title: string;
   done: boolean;
+  description?: string;
 }
 
 export interface ITask extends ILocalTask {

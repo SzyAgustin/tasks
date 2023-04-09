@@ -1,37 +1,24 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { AppContext } from '../context/AppContext';
-import Modal from 'react-modal';
+import AddEditTaskModal from './AddEditTaskModal';
+import TransitionIcons from './TransitionIcons';
+import { BiMinus } from 'react-icons/bi';
 
 const AddTaskButton = () => {
   const { darkMode, isAddingTask, setIsAddingTask } = useContext(AppContext);
 
-  const customStyles = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-    },
-    overlay: {
-      background: '#00000088',
-    },
-  };
-
   return (
     <>
       <AddButton darkMode={darkMode} onClick={() => setIsAddingTask(true)}>
-        {isAddingTask ? '-' : '+'}
+        {/* {isAddingTask ? '-' : '+'} */}
+        <TransitionIcons
+          showFirst={!isAddingTask}
+          first={<p>{'+'}</p>}
+          second={<BiMinus />}
+        />
       </AddButton>
-      <Modal
-        isOpen={isAddingTask}
-        onRequestClose={() => setIsAddingTask(false)}
-        style={customStyles}
-      >
-        dfasdfg
-      </Modal>
+      <AddEditTaskModal />
     </>
   );
 };
