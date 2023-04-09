@@ -10,6 +10,25 @@ interface InputProps {
   [x: string]: any;
 }
 
+const Input = ({ label, name, darkMode, ...rest }: InputProps) => {
+  return (
+    <InputDiv>
+      <StyledLabel htmlFor={name}>{label}</StyledLabel>
+      <StyledField
+        id={name}
+        name={name}
+        darkMode={darkMode}
+        {...rest}
+      ></StyledField>
+      <ErrorMessage name={name}>
+        {(error) => <TextError>{error}</TextError>}
+      </ErrorMessage>
+    </InputDiv>
+  );
+};
+
+export default Input;
+
 const InputDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -36,22 +55,3 @@ const StyledLabel = styled.label`
   margin-bottom: 2px;
   font-size: 12px;
 `;
-
-const Input = ({ label, name, darkMode, ...rest }: InputProps) => {
-  return (
-    <InputDiv>
-      <StyledLabel htmlFor={name}>{label}</StyledLabel>
-      <StyledField
-        id={name}
-        name={name}
-        darkMode={darkMode}
-        {...rest}
-      ></StyledField>
-      <ErrorMessage name={name}>
-        {(error) => <TextError>{error}</TextError>}
-      </ErrorMessage>
-    </InputDiv>
-  );
-};
-
-export default Input;

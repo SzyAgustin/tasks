@@ -5,11 +5,7 @@ import { Form, Formik } from 'formik';
 import Input from './form/Input';
 import * as Yup from 'yup';
 import styled from 'styled-components';
-import Button from './Button';
 import { ILocalTask, addTask, getTask } from '../services/TaskService';
-import { TailSpin } from 'react-loader-spinner';
-import { MdDone } from 'react-icons/md';
-import TransitionIcons from './TransitionIcons';
 import { deleteDoc, updateDoc } from 'firebase/firestore';
 import ModalButton from './ModalButton';
 
