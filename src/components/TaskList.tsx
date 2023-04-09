@@ -1,16 +1,17 @@
 import React, { useContext } from 'react';
 import Task from './Task';
-import TaskAddEdit from './TaskAddEdit';
 import { AppContext } from '../context/AppContext';
 import { FlexCenterBox } from './FlexCenterBox';
 
 const TaskList = () => {
-  const { isAddingTask, todayTasks } = useContext(AppContext);
+  const { todayTasks, searchValue } = useContext(AppContext);
   return (
     <>
       {todayTasks.length === 0 && (
         <FlexCenterBox>
-          Aún no tienes tareas para el dia de hoy. Agrega una!
+          {searchValue
+            ? 'No existe una tarea para esa busqueda.'
+            : 'Aún no tienes tareas para el dia de hoy. Agrega una!'}
         </FlexCenterBox>
       )}
       {todayTasks.map((task) => (

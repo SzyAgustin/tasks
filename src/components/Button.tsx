@@ -5,6 +5,9 @@ interface ButtonProps {
   color?: string;
   fontSize?: string;
   success?: boolean;
+  margin?: string;
+  marginLeft?: string;
+  marginRight?: string;
 }
 
 const Button = styled.button<ButtonProps>`
@@ -16,6 +19,9 @@ const Button = styled.button<ButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
+  ${(p) => p.margin && `margin: ${p.margin};`}
+  ${(p) => p.marginLeft && `margin-left: ${p.marginLeft};`}
+  ${(p) => p.marginRight && `margin-right: ${p.marginRight};`}
   background-color: ${(p) =>
     p.success
       ? '#3eb928'

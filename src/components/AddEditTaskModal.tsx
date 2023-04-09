@@ -6,27 +6,81 @@ import Input from './form/Input';
 import * as Yup from 'yup';
 import styled from 'styled-components';
 import Button from './Button';
-import { ILocalTask, addTask } from '../services/TaskService';
+import { ILocalTask, addTask, getTask } from '../services/TaskService';
 import { TailSpin } from 'react-loader-spinner';
-import DarkMode from './DarkMode';
 import { MdDone } from 'react-icons/md';
 import TransitionIcons from './TransitionIcons';
+import { deleteDoc, updateDoc } from 'firebase/firestore';
+import ModalButton from './ModalButton';
 
 const AddEditTaskModal = () => {
-  const { darkMode, isAddingTask, setIsAddingTask, setTodayTasks, todayTasks } =
-    useContext(AppContext);
+  const {
+    darkMode,
+    isAddingTask,
+    setIsAddingTask,
+    isEditingTask,
+    setIsEditingTask,
+    setTodayTasks,
+    todayTasks,
+    taskToEdit,
+    setTaskToEdit,
+  } = useContext(AppContext);
   const [loading, setLoading] = useState<boolean>(false);
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const [deleted, setDeleted] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
+
+  const closeModal = () => {
+    setIsAddingTask(false);
+    setIsEditingTask(false);
+    setTaskToEdit(undefined);
+  };
 
   const timeoutClose = () => {
     setTimeout(() => {
+      setDeleting(false);
+      setDeleted(false);
       setLoading(false);
-      setIsAddingTask(false);
+      closeModal();
       setSuccess(false);
     }, 1000);
   };
 
+  const handleEdit = (id: string, task: ILocalTask) => {
+    setLoading(true);
+    const taskRef = getTask(id);
+    updateDoc(taskRef, {
+      title: task.title,
+      description: task.description,
+      done: task.done,
+    })
+      .then(() => {
+        setSuccess(true);
+        const tasks = todayTasks.map((taskInList) =>
+          taskInList.id === id ? { ...task, id } : taskInList
+        );
+        setTodayTasks(tasks);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setSuccess(false);
+        console.log(err); //TODO: agregar toaster para mostrar este error
+      })
+      .finally(() => {
+        timeoutClose();
+      });
+  };
+
   const onSubmit = (task: ILocalTask) => {
+    console.log('onsumbit');
+    if (taskToEdit) {
+      handleEdit(taskToEdit.id, task);
+    } else {
+      handleAdd(task);
+    }
+  };
+
+  const handleAdd = (task: ILocalTask) => {
     setLoading(true);
     addTask(task)
       .then((res) => {
@@ -42,10 +96,27 @@ const AddEditTaskModal = () => {
       });
   };
 
+  const handleDelete = () => {
+    setDeleting(true);
+    deleteDoc(getTask(taskToEdit!.id))
+      .then(() => {
+        setDeleted(true);
+        setTodayTasks(todayTasks.filter((task) => task.id !== taskToEdit!.id));
+      })
+      .catch((err) => {
+        setDeleted(false);
+        setDeleting(false);
+        console.log(err); //Todo: manejar error
+      })
+      .finally(() => {
+        timeoutClose();
+      });
+  };
+
   const initialValues = {
-    title: '',
-    description: '',
-    done: false,
+    title: taskToEdit?.title || '',
+    description: taskToEdit?.description || '',
+    done: taskToEdit?.done || false,
   };
 
   const validationSchema = Yup.object({
@@ -54,12 +125,14 @@ const AddEditTaskModal = () => {
 
   return (
     <Modal
-      isOpen={isAddingTask}
-      onRequestClose={() => setIsAddingTask(false)}
+      isOpen={isAddingTask || isEditingTask}
+      onRequestClose={closeModal}
       style={customStyles(darkMode)}
     >
       <ModalBox darkMode={darkMode}>
-        <TitleBox darkMode={darkMode}>Nueva tarea</TitleBox>
+        <TitleBox darkMode={darkMode}>
+          {taskToEdit ? 'Editar tarea' : 'Nueva tarea'}
+        </TitleBox>
         <FormBox>
           <Formik
             onSubmit={onSubmit}
@@ -75,33 +148,15 @@ const AddEditTaskModal = () => {
                   darkMode={darkMode}
                 />
                 <FormFooter darkMode={darkMode}>
-                  <CustomButton
-                    type='submit'
-                    fontSize='16px'
-                    disabled={loading}
-                    success={success}
-                  >
-                    {!success && !loading ? (
-                      <p>Agregar</p>
-                    ) : (
-                      <TransitionIcons
-                        showFirst={success}
-                        first={<MdDone />}
-                        second={
-                          <TailSpin
-                            height='18.5'
-                            width='18.5'
-                            color='#ffffff'
-                            ariaLabel='tail-spin-loading'
-                            radius='1'
-                            wrapperStyle={{}}
-                            wrapperClass=''
-                            visible={true}
-                          />
-                        }
-                      />
-                    )}
-                  </CustomButton>
+                  <ModalButton loading={loading} success={success} />
+                  {taskToEdit && (
+                    <ModalButton
+                      loading={deleting}
+                      success={deleted}
+                      onClick={handleDelete}
+                      isDeletion
+                    />
+                  )}
                 </FormFooter>
               </Form>
             )}
@@ -142,6 +197,7 @@ const FormBox = styled.div`
 const FormFooter = styled.div<DarkModeProps>`
   border-top: 1px solid ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
   padding: 20px 0;
+  display: flex;
 `;
 
 const customStyles = (darkMode: boolean) => ({
@@ -170,11 +226,3 @@ const customStyles = (darkMode: boolean) => ({
     background: '#00000099',
   },
 });
-
-const CustomButton = styled(Button)`
-  min-width: 100px;
-  min-height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;

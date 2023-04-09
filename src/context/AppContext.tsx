@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
-import { ITask, getTask, getTasks } from '../services/TaskService';
-import { deleteDoc, getDocs } from 'firebase/firestore';
+import { ITask, getTasks } from '../services/TaskService';
+import { getDocs } from 'firebase/firestore';
 
 interface IAppState {
   darkMode: boolean;
@@ -13,8 +13,12 @@ interface IAppState {
   setTodayTasks: (x: ITask[]) => void;
   isAddingTask: boolean;
   setIsAddingTask: (x: boolean) => void;
+  isEditingTask: boolean;
+  setIsEditingTask: (x: boolean) => void;
   getAllTasks: () => void;
-  handleDelete: (id: string) => void;
+  taskToEdit?: ITask;
+  setTaskToEdit: (task: ITask | undefined) => void;
+  setTaskToEditWithId: (id: string) => void;
 }
 
 const initialState: IAppState = {
@@ -24,12 +28,16 @@ const initialState: IAppState = {
   setLoadingTasks: (x: boolean) => {},
   isAddingTask: false,
   setIsAddingTask: (x: boolean) => {},
+  isEditingTask: false,
+  setIsEditingTask: (x: boolean) => {},
   getAllTasks: () => {},
   todayTasks: [],
   setTodayTasks: () => {},
-  handleDelete: () => {},
   searchValue: '',
   setSearchValue: (x: string) => {},
+  taskToEdit: undefined,
+  setTaskToEdit: (task: ITask | undefined) => {},
+  setTaskToEditWithId: (id: string) => {},
 };
 
 interface AppProviderProps {
@@ -41,24 +49,34 @@ export const AppContext = createContext<IAppState>(initialState);
 export const AppProvider = ({ children }: AppProviderProps) => {
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [isAddingTask, setIsAddingTask] = useState<boolean>(false);
+  const [isEditingTask, setIsEditingTask] = useState<boolean>(false);
   const [todayTasks, setTodayTasks] = useState<ITask[]>([]);
   const [loadingTasks, setLoadingTasks] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [taskToEdit, setTaskToEdit] = useState<ITask | undefined>();
 
-  const todayTasksFiltered = searchValue
-    ? todayTasks.filter((task) =>
-        task.title.toLowerCase().includes(searchValue.toLowerCase())
-      )
-    : todayTasks;
+  const setTaskToEditWithId = (id: string | undefined) => {
+    if (!id) {
+      setTaskToEdit(undefined);
+      return;
+    }
+    setTaskToEdit(todayTasks.find((task) => task.id === id));
+  };
 
-  const handleDelete = (id: string) => {
-    deleteDoc(getTask(id))
-      .then(() => {
-        setTodayTasks(todayTasks.filter((task) => task.id !== id));
-      })
-      .catch((err) => {
-        console.log(err); //Todo: manejar error
-      });
+  const getOrderedTasks = () => {
+    todayTasks.sort((a, b) => (a.id < b.id ? -1 : 1)); //TODO: change this and create way to customize ordering the tasks
+    const doneTasks = todayTasks.filter((task) => task.done);
+    const undoneTasks = todayTasks.filter((task) => !task.done);
+
+    const tasks = undoneTasks.concat(doneTasks);
+
+    const orderedTasksSearched = searchValue
+      ? tasks.filter((task) =>
+          task.title.toLowerCase().includes(searchValue.toLowerCase())
+        )
+      : tasks;
+
+    return orderedTasksSearched;
   };
 
   const getAllTasks = () => {
@@ -82,13 +100,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         isAddingTask,
         setIsAddingTask,
         getAllTasks,
-        todayTasks: todayTasksFiltered,
+        todayTasks: getOrderedTasks(),
         setTodayTasks,
         loadingTasks,
         setLoadingTasks,
-        handleDelete,
         searchValue,
         setSearchValue,
+        isEditingTask,
+        setIsEditingTask,
+        taskToEdit,
+        setTaskToEdit,
+        setTaskToEditWithId,
       }}
     >
       {children}

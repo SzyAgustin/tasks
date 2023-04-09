@@ -6,6 +6,7 @@ import styled from 'styled-components';
 interface InputProps {
   label: string;
   name: string;
+  darkMode: boolean;
   [x: string]: any;
 }
 
@@ -36,11 +37,16 @@ const StyledLabel = styled.label`
   font-size: 12px;
 `;
 
-const Input = ({ label, name, ...rest }: InputProps) => {
+const Input = ({ label, name, darkMode, ...rest }: InputProps) => {
   return (
     <InputDiv>
       <StyledLabel htmlFor={name}>{label}</StyledLabel>
-      <StyledField id={name} name={name} {...rest}></StyledField>
+      <StyledField
+        id={name}
+        name={name}
+        darkMode={darkMode}
+        {...rest}
+      ></StyledField>
       <ErrorMessage name={name}>
         {(error) => <TextError>{error}</TextError>}
       </ErrorMessage>

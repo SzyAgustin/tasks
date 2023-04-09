@@ -1,10 +1,9 @@
-import React, { useState, useContext, MouseEventHandler } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import Switch from 'react-switch';
 import { getTask } from '../services/TaskService';
 import { updateDoc } from 'firebase/firestore';
 import { AppContext } from '../context/AppContext';
-import TaskAddEdit from './TaskAddEdit';
 
 interface Props {
   id: string;
@@ -13,10 +12,14 @@ interface Props {
 }
 
 const Task = ({ id, title, done }: Props) => {
-  const { darkMode, todayTasks, setTodayTasks, handleDelete } =
-    useContext(AppContext);
+  const {
+    darkMode,
+    todayTasks,
+    setTodayTasks,
+    setIsAddingTask,
+    setTaskToEditWithId,
+  } = useContext(AppContext);
   const [loadingTaskChange, setLoadingTaskChange] = useState<boolean>(false);
-  const [editMode, setEditMode] = useState<boolean>(false);
 
   const setTask = (id: string, value: boolean) => {
     setLoadingTaskChange(true);
@@ -38,15 +41,16 @@ const Task = ({ id, title, done }: Props) => {
       });
   };
 
-  const handleClick = (e: any) => {
-    if (e.detail === 2) {
-      setEditMode(true);
-    }
+  const handleClick = () => {
+    setTaskToEditWithId(id);
+    setIsAddingTask(true);
   };
 
   return (
-    <TaskBox darkMode={darkMode} onClick={handleClick}>
-      <p>{title}</p>
+    <TaskBox darkMode={darkMode}>
+      <p style={{ width: '90%' }} onClick={handleClick}>
+        {title}
+      </p>
       <Switch
         onChange={() => setTask(id, !done)}
         checked={done}
@@ -64,6 +68,7 @@ interface TaskBoxProps {
 }
 
 export const TaskBox = styled.div<TaskBoxProps>`
+  transition: 0.1s;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -72,4 +77,10 @@ export const TaskBox = styled.div<TaskBoxProps>`
   border-radius: 3px;
   margin-bottom: 1em;
   user-select: none;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0px 0px 5px 0px
+      ${(p) => (p.darkMode ? '#ffffffcb' : '#006baee4')};
+  }
 `;
