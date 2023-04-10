@@ -1,14 +1,13 @@
 import { db } from "./Firebase";
-import { collection, doc, query, where, Timestamp, writeBatch, addDoc } from "firebase/firestore";
-// import { IItemCart } from "../context/CartContext";
+import { doc, getDoc } from "firebase/firestore";
 
 const lastExcecutionTable = "LastExecution";
-
-// export const getLastExecution = (userId: string) => {
-//     return query(collection(db, lastExcecutionTable), where("userId", "==", userId));
-// }
 
 export const getLastExecution = (userId: string) => {
     return doc(db, lastExcecutionTable, userId);
 }
 
+export const getLastExecutionSnapshot = async (userId: string) => {
+    const lastExecutionRef = getLastExecution(userId); //TODO: Send userid
+    return await getDoc(lastExecutionRef);
+} 

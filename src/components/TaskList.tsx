@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import Task from './Task';
 import { AppContext } from '../context/AppContext';
 import { FlexCenterBox } from './FlexCenterBox';
 import DragNDropList from './DragNDropList';

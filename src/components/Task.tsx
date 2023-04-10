@@ -17,7 +17,7 @@ const Task = ({ task }: TaskProps) => {
     todayTasks,
     setTodayTasks,
     setIsAddingTask,
-    setTaskToEditWithId,
+    setTaskToEdit,
   } = useContext(AppContext);
   const [loadingTaskChange, setLoadingTaskChange] = useState<boolean>(false);
 
@@ -42,7 +42,7 @@ const Task = ({ task }: TaskProps) => {
   };
 
   const handleClick = () => {
-    setTaskToEditWithId(id);
+    setTaskToEdit(todayTasks.find((task) => task.id === id));
     setIsAddingTask(true);
   };
 

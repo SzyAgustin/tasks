@@ -1,15 +1,8 @@
 import React, { createContext, useState } from 'react';
-import { ITask, cleanDoneTasks, getTasks } from '../services/TaskService';
-import {
-  DocumentData,
-  DocumentReference,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
-import { getLastExecution } from '../services/FirstExecutionService';
-import { getTasksUserSorting } from '../services/SortingService';
+import { ITask, getTasks } from '../services/TaskService';
+import { getDocs } from 'firebase/firestore';
+import { dailyFirstExecutionCleanUp } from './LastExecutionHelper';
+import { getSortedTasks, saveTasksSorting } from './SortingHelper';
 
 interface IAppState {
   darkMode: boolean;
@@ -27,7 +20,6 @@ interface IAppState {
   getAllTasks: () => void;
   taskToEdit?: ITask;
   setTaskToEdit: (task: ITask | undefined) => void;
-  setTaskToEditWithId: (id: string) => void;
   setTodayTasksWithSorting: (x: ITask[]) => void;
 }
 
@@ -47,7 +39,6 @@ const initialState: IAppState = {
   setSearchValue: (x: string) => {},
   taskToEdit: undefined,
   setTaskToEdit: (task: ITask | undefined) => {},
-  setTaskToEditWithId: (id: string) => {},
   setTodayTasksWithSorting: (x: ITask[]) => {},
 };
 
@@ -66,91 +57,21 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [taskToEdit, setTaskToEdit] = useState<ITask | undefined>();
 
-  const setTaskToEditWithId = (id: string | undefined) => {
-    if (!id) {
-      setTaskToEdit(undefined);
-      return;
-    }
-    setTaskToEdit(todayTasks.find((task) => task.id === id));
-  };
-
   const setTodayTasksWithSorting = (tasks: ITask[]) => {
     setTodayTasks(tasks);
     saveTasksSorting(tasks);
   };
 
-  const saveTasksSorting = (tasks: ITask[]) => {
-    const ids = tasks.map((task) => task.id);
-    const tasksUserSortingRef = getTasksUserSorting('1'); //todo: send user id
-    setDoc(tasksUserSortingRef, {
-      sortedList: ids,
-      userId: '1', //TODO, change this when authentication is developed
-    })
-      .then((res) => {})
-      .catch((err) => {
-        console.log('err', err); //TODO: agregar toaster para mostrar este error
-      });
-  };
-
-  const getOrderedTasks = async (tasks: ITask[]) => {
-    const tasksUserSortingRef = getTasksUserSorting('1');
-    const tasksUserSortingSnap = await getDoc(tasksUserSortingRef);
-    if (tasksUserSortingSnap.exists()) {
-      const sorted = tasksUserSortingSnap
-        .data()
-        .sortedList.map((id: string) => tasks.find((task) => task.id === id));
-      return sorted.filter((task: ITask) => task !== undefined);
-    } else {
-      saveTasksSorting(tasks);
-    }
-
-    return todayTasks;
-  };
-
-  const getTodaysDate = () => {
-    const date = new Date();
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-  };
-
-  const dailyFirstExecutionCleanUp = async () => {
-    const lastExecutionRef = getLastExecution('1'); //TODO: Send userid
-    const lastExecutionSnap = await getDoc(lastExecutionRef);
-
-    if (
-      lastExecutionSnap.exists() &&
-      lastExecutionSnap.data().lastExecution !== getTodaysDate()
-    ) {
-      await cleanDoneTasks();
-    }
-    setLastExecution(lastExecutionRef);
-  };
-
-  const setLastExecution = (
-    lastExecutionRef: DocumentReference<DocumentData>
-  ) => {
-    setDoc(lastExecutionRef, {
-      lastExecution: getTodaysDate(),
-      userId: '1', //TODO, change this when authentication is developed
-    })
-      .then((res) => {})
-      .catch((err) => {
-        console.log('err', err); //TODO: agregar toaster para mostrar este error
-      });
-  };
-
   const getAllTasks = async () => {
     setLoadingTasks(true);
     await dailyFirstExecutionCleanUp();
-    const query = getTasks();
-    getDocs(query).then(async (querySnapshot) => {
-      const todayTasks = await getOrderedTasks(
-        querySnapshot.docs.map(
-          (doc) => ({ id: doc.id, ...doc.data() } as ITask)
-        )
-      );
-      setTodayTasks(todayTasks);
-      setLoadingTasks(false);
-    });
+    const allTasksSnapshot = await getDocs(getTasks());
+    const todayTasks = allTasksSnapshot.docs.map(
+      (doc) => ({ id: doc.id, ...doc.data() } as ITask)
+    );
+    const todayTasksSorted = await getSortedTasks(todayTasks);
+    setTodayTasks(todayTasksSorted);
+    setLoadingTasks(false);
   };
 
   return (
@@ -171,7 +92,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setIsEditingTask,
         taskToEdit,
         setTaskToEdit,
-        setTaskToEditWithId,
         setTodayTasksWithSorting,
       }}
     >

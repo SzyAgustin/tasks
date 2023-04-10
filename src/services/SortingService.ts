@@ -1,6 +1,5 @@
 import { db } from "./Firebase";
-import { collection, doc, query, where, Timestamp, writeBatch, addDoc, getDocs, deleteDoc, getDoc } from "firebase/firestore";
-// import { IItemCart } from "../context/CartContext";
+import { doc, getDoc } from "firebase/firestore";
 
 const SortingTable = "Sorting";
 
