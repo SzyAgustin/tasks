@@ -51,6 +51,7 @@ const AddEditTaskModal = () => {
       title: task.title,
       description: task.description,
       done: task.done,
+      isPeriodic: task.isPeriodic,
     })
       .then(() => {
         setSuccess(true);
