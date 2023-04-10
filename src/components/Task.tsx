@@ -49,7 +49,7 @@ const Task = ({ task }: TaskProps) => {
   return (
     <TaskBox darkMode={darkMode}>
       <p style={{ width: '90%' }} onClick={handleClick}>
-        {title} {isPeriodic && <StyledRiRepeatFill />}
+        {title} {isPeriodic && <StyledRiRepeatFill color='#00d75d' />}
       </p>
       <Switch
         onChange={() => setTask(id, !done)}
@@ -87,4 +87,5 @@ export const TaskBox = styled.div<TaskBoxProps>`
 
 const StyledRiRepeatFill = styled(RiRepeatFill)`
   margin-bottom: -3px;
+  /* color: red; */
 `;

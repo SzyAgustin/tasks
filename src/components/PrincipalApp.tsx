@@ -37,7 +37,7 @@ const Box = styled.div`
 
 const AppBox = styled.div<AppBoxProps>`
   transition: 0.4s;
-  background-color: ${(p) => (p.darkMode ? '#04224e' : 'white')};
+  background-color: ${(p) => (p.darkMode ? '#10223c' : 'white')};
   color: ${(p) => (p.darkMode ? 'white' : '#04224e')};
   width: 100%;
   height: 100%;

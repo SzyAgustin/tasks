@@ -21,7 +21,7 @@ interface HeaderBoxProps {
 const HeaderBox = styled.div<HeaderBoxProps>`
   transition: 0.4s;
   height: 80px;
-  background-color: ${(p) => (p.darkMode ? '#000019' : '#052b63')};
+  background-color: ${(p) => (p.darkMode ? '#060619' : '#052b63')};
   padding: 0 50px;
   display: flex;
   align-items: center;
