@@ -11,7 +11,7 @@
 // const arr = [producto1, producto2, producto3, producto4, producto5, producto6, producto7, producto8, producto9];
 
 import { db } from "./Firebase";
-import { collection, doc, query, where, Timestamp, writeBatch, addDoc, getDocs, deleteDoc } from "firebase/firestore";
+import { collection, doc, query, where, Timestamp, writeBatch, addDoc, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 // import { IItemCart } from "../context/CartContext";
 
 
@@ -48,6 +48,20 @@ export const addTask = (task: ILocalTask) => {
 
 export const getTask = (taskId: string) => {
   return doc(db, TaskList, taskId);
+}
+
+export const deleteTask = (taskId: string) => {
+  return deleteDoc(getTask(taskId));
+}
+
+export const editTask = (taskId: string, task: ILocalTask) => {
+  const taskRef = getTask(taskId);
+  return updateDoc(taskRef, {
+    title: task.title,
+    description: task.description,
+    done: task.done,
+    isPeriodic: task.isPeriodic,
+  })
 }
 
 export const cleanDoneTasks = async () => {

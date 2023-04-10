@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { AppContext } from '../context/AppContext';
-import AddEditTaskModal from './AddEditTaskModal';
+import AddEditTaskModal from './addEditTaskModal/AddEditTaskModal';
 import TransitionIcons from './TransitionIcons';
 import { BiMinus } from 'react-icons/bi';
 
