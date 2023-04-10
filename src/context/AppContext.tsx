@@ -9,6 +9,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { getLastExecution } from '../services/FirstExecutionService';
+import { getTasksUserSorting } from '../services/SortingService';
 
 interface IAppState {
   darkMode: boolean;
@@ -27,6 +28,7 @@ interface IAppState {
   taskToEdit?: ITask;
   setTaskToEdit: (task: ITask | undefined) => void;
   setTaskToEditWithId: (id: string) => void;
+  setTodayTasksWithSorting: (x: ITask[]) => void;
 }
 
 const initialState: IAppState = {
@@ -46,6 +48,7 @@ const initialState: IAppState = {
   taskToEdit: undefined,
   setTaskToEdit: (task: ITask | undefined) => {},
   setTaskToEditWithId: (id: string) => {},
+  setTodayTasksWithSorting: (x: ITask[]) => {},
 };
 
 interface AppProviderProps {
@@ -71,18 +74,40 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     setTaskToEdit(todayTasks.find((task) => task.id === id));
   };
 
-  const getOrderedTasks = () => {
-    // todayTasks.sort((a, b) => (a.title < b.title ? -1 : 1)); //TODO: change this and create way to customize ordering the tasks
-    // // const doneTasks = todayTasks.filter((task) => task.done);
-    // // const undoneTasks = todayTasks.filter((task) => !task.done);
+  const setTodayTasksWithSorting = (tasks: ITask[]) => {
+    console.log('setTodayTasksWithSorting', tasks);
+    setTodayTasks(tasks);
+    saveTasksSorting(tasks);
+  };
 
-    // // const tasks = undoneTasks.concat(doneTasks);
+  const saveTasksSorting = (tasks: ITask[]) => {
+    const ids = tasks.map((task) => task.id);
+    const tasksUserSortingRef = getTasksUserSorting('1'); //todo: send user id
+    setDoc(tasksUserSortingRef, {
+      sortedList: ids,
+      userId: '1', //TODO, change this when authentication is developed
+    })
+      .then((res) => {
+        console.log('res', res);
+      })
+      .catch((err) => {
+        console.log('err', err); //TODO: agregar toaster para mostrar este error
+      });
+  };
 
-    // const orderedTasksSearched = searchValue
-    //   ? todayTasks.filter((task) =>
-    //       task.title.toLowerCase().includes(searchValue.toLowerCase())
-    //     )
-    //   : todayTasks;
+  const getOrderedTasks = async (tasks: ITask[]) => {
+    const tasksUserSortingRef = getTasksUserSorting('1');
+    const tasksUserSortingSnap = await getDoc(tasksUserSortingRef);
+    console.log(tasksUserSortingSnap.data());
+    if (tasksUserSortingSnap.exists()) {
+      const sorted = tasksUserSortingSnap
+        .data()
+        .sortedList.map((id: string) => tasks.find((task) => task.id === id));
+      console.log('first sort', sorted);
+      return sorted.filter((task: ITask) => task !== undefined);
+    } else {
+      saveTasksSorting(tasks);
+    }
 
     return todayTasks;
   };
@@ -124,12 +149,14 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     setLoadingTasks(true);
     await dailyFirstExecutionCleanUp();
     const query = getTasks();
-    getDocs(query).then((querySnapshot) => {
-      setTodayTasks(
-        querySnapshot.docs.map((doc) => {
-          return { id: doc.id, ...doc.data() } as ITask;
-        })
+    getDocs(query).then(async (querySnapshot) => {
+      const todayTasks = await getOrderedTasks(
+        querySnapshot.docs.map(
+          (doc) => ({ id: doc.id, ...doc.data() } as ITask)
+        )
       );
+      console.log('return from getOrderedTasks', todayTasks);
+      setTodayTasks(todayTasks);
       setLoadingTasks(false);
     });
   };
@@ -142,7 +169,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         isAddingTask,
         setIsAddingTask,
         getAllTasks,
-        todayTasks: getOrderedTasks(),
+        todayTasks,
         setTodayTasks,
         loadingTasks,
         setLoadingTasks,
@@ -153,6 +180,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         taskToEdit,
         setTaskToEdit,
         setTaskToEditWithId,
+        setTodayTasksWithSorting,
       }}
     >
       {children}

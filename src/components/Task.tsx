@@ -75,7 +75,6 @@ export const TaskBox = styled.div<TaskBoxProps>`
   background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
   padding: 0.5em 1em;
   border-radius: 3px;
-  margin-bottom: 1em;
   user-select: none;
   cursor: pointer;
 
