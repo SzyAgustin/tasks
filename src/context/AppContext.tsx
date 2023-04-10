@@ -75,7 +75,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   };
 
   const setTodayTasksWithSorting = (tasks: ITask[]) => {
-    console.log('setTodayTasksWithSorting', tasks);
     setTodayTasks(tasks);
     saveTasksSorting(tasks);
   };
@@ -87,9 +86,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       sortedList: ids,
       userId: '1', //TODO, change this when authentication is developed
     })
-      .then((res) => {
-        console.log('res', res);
-      })
+      .then((res) => {})
       .catch((err) => {
         console.log('err', err); //TODO: agregar toaster para mostrar este error
       });
@@ -98,12 +95,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const getOrderedTasks = async (tasks: ITask[]) => {
     const tasksUserSortingRef = getTasksUserSorting('1');
     const tasksUserSortingSnap = await getDoc(tasksUserSortingRef);
-    console.log(tasksUserSortingSnap.data());
     if (tasksUserSortingSnap.exists()) {
       const sorted = tasksUserSortingSnap
         .data()
         .sortedList.map((id: string) => tasks.find((task) => task.id === id));
-      console.log('first sort', sorted);
       return sorted.filter((task: ITask) => task !== undefined);
     } else {
       saveTasksSorting(tasks);
@@ -137,9 +132,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       lastExecution: getTodaysDate(),
       userId: '1', //TODO, change this when authentication is developed
     })
-      .then((res) => {
-        console.log('res', res);
-      })
+      .then((res) => {})
       .catch((err) => {
         console.log('err', err); //TODO: agregar toaster para mostrar este error
       });
@@ -155,7 +148,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
           (doc) => ({ id: doc.id, ...doc.data() } as ITask)
         )
       );
-      console.log('return from getOrderedTasks', todayTasks);
       setTodayTasks(todayTasks);
       setLoadingTasks(false);
     });

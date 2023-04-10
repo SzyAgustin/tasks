@@ -21,6 +21,7 @@ const AddEditTaskModal = () => {
     todayTasks,
     taskToEdit,
     setTaskToEdit,
+    setTodayTasksWithSorting,
   } = useContext(AppContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [deleting, setDeleting] = useState<boolean>(false);
@@ -69,7 +70,6 @@ const AddEditTaskModal = () => {
   };
 
   const onSubmit = (task: ILocalTask) => {
-    console.log('onsumbit');
     if (taskToEdit) {
       handleEdit(taskToEdit.id, task);
     } else {
@@ -82,7 +82,7 @@ const AddEditTaskModal = () => {
     addTask(task)
       .then((res) => {
         setSuccess(true);
-        setTodayTasks([...todayTasks, { ...task, id: res.id }]);
+        setTodayTasksWithSorting([...todayTasks, { ...task, id: res.id }]);
       })
       .catch((err) => {
         setLoading(false);
@@ -98,7 +98,9 @@ const AddEditTaskModal = () => {
     deleteDoc(getTask(taskToEdit!.id))
       .then(() => {
         setDeleted(true);
-        setTodayTasks(todayTasks.filter((task) => task.id !== taskToEdit!.id));
+        setTodayTasksWithSorting(
+          todayTasks.filter((task) => task.id !== taskToEdit!.id)
+        );
       })
       .catch((err) => {
         setDeleted(false);
