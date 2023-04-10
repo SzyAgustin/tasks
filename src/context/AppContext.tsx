@@ -72,19 +72,19 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   };
 
   const getOrderedTasks = () => {
-    todayTasks.sort((a, b) => (a.title < b.title ? -1 : 1)); //TODO: change this and create way to customize ordering the tasks
-    // const doneTasks = todayTasks.filter((task) => task.done);
-    // const undoneTasks = todayTasks.filter((task) => !task.done);
+    // todayTasks.sort((a, b) => (a.title < b.title ? -1 : 1)); //TODO: change this and create way to customize ordering the tasks
+    // // const doneTasks = todayTasks.filter((task) => task.done);
+    // // const undoneTasks = todayTasks.filter((task) => !task.done);
 
-    // const tasks = undoneTasks.concat(doneTasks);
+    // // const tasks = undoneTasks.concat(doneTasks);
 
-    const orderedTasksSearched = searchValue
-      ? todayTasks.filter((task) =>
-          task.title.toLowerCase().includes(searchValue.toLowerCase())
-        )
-      : todayTasks;
+    // const orderedTasksSearched = searchValue
+    //   ? todayTasks.filter((task) =>
+    //       task.title.toLowerCase().includes(searchValue.toLowerCase())
+    //     )
+    //   : todayTasks;
 
-    return orderedTasksSearched;
+    return todayTasks;
   };
 
   const getTodaysDate = () => {

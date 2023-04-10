@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import Task from './Task';
 import { AppContext } from '../context/AppContext';
 import { FlexCenterBox } from './FlexCenterBox';
+import DragNDropList from './DragNDropList';
 
 const TaskList = () => {
   const { todayTasks, searchValue } = useContext(AppContext);
@@ -14,9 +15,10 @@ const TaskList = () => {
             : 'Aún no tienes tareas para el dia de hoy. Agrega una!'}
         </FlexCenterBox>
       )}
-      {todayTasks.map((task) => (
+      {/* {todayTasks.map((task) => (
         <Task key={task.id} task={task} />
-      ))}
+      ))} */}
+      <DragNDropList tasksList={todayTasks} />
     </>
   );
 };
