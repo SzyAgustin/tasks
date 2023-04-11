@@ -27,9 +27,7 @@ const PeriodicSelection = () => {
       setPeriodicSelection(periodicSelection.filter((day) => day !== dayId));
     } else {
       const days = [...periodicSelection, dayId];
-      setPeriodicSelection(
-        days.every((day) => allDays.includes(day)) ? [] : days
-      );
+      setPeriodicSelection(days.length === 7 ? [] : days);
     }
   };
 
@@ -85,7 +83,7 @@ const DayCheckBox = styled.div<DayCheckBoxProps>`
   font-size: 14px;
   border: none;
   border-radius: 4px;
-  background-color: ${(p) => (p.isSelected ? '#5688f3' : '#375595')};
+  background-color: ${(p) => (p.isSelected ? '#00d75d' : 'gray')};
   cursor: pointer;
   color: white;
 `;
