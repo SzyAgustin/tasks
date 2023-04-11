@@ -82,7 +82,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     const todayTasksSorted = await sortUserTasks(todayTasks, user?.uid!);
     setTodayTasks(todayTasksSorted);
     setLoadingTasks(false);
-  }, []);
+  }, [user?.uid]);
 
   return (
     <AppContext.Provider
@@ -92,9 +92,12 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         isAddingTask,
         setIsAddingTask,
         getAllTasks,
-        todayTasks: todayTasks.filter((task) =>
-          task.title.toLowerCase().includes(searchValue.toLowerCase())
-        ),
+        todayTasks:
+          searchValue !== ''
+            ? todayTasks.filter((task) =>
+                task.title.toLowerCase().includes(searchValue.toLowerCase())
+              )
+            : todayTasks,
         setTodayTasks,
         loadingTasks,
         setLoadingTasks,
