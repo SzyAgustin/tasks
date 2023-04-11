@@ -6,13 +6,14 @@ import Logo from '../images/szy-tasks-logo.png';
 import { userSignOut } from '../services/Firebase';
 
 const Header = () => {
-  const { darkMode } = useContext(AppContext);
+  const { darkMode, setDarkMode } = useContext(AppContext);
   const { user, setUser } = useContext(UserContext);
 
   const signOut = () => {
     userSignOut();
     setUser(undefined);
-    localStorage.removeItem('ecommerce-user');
+    localStorage.removeItem('tasks-user');
+    setDarkMode(true);
   };
 
   return (

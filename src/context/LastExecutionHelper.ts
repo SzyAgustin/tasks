@@ -19,7 +19,8 @@ export const setLastExecution = (
 
 export const getTodaysDate = () => {
     const date = new Date();
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+    const month = date.getMonth() + 1; //TODO: raro. Necesito hacer esto para que ponga el mes correctamente
+    return `${date.getFullYear()}-${month}-${date.getDate()}`;
 };
 
 export const dailyFirstExecutionCleanUp = async (userId: string) => {
