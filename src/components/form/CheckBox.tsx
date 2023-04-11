@@ -21,7 +21,9 @@ const CheckBox = ({ label, name, ...rest }: CheckBoxProps) => {
         id={name}
         name={name}
         darkMode={darkMode}
-        render={({ field, form }: FieldProps) => (
+        {...rest}
+      >
+        {({ field, form }: FieldProps) => (
           <Switch
             {...field}
             onChange={(val) => form.setFieldValue(name, val)}
@@ -29,8 +31,7 @@ const CheckBox = ({ label, name, ...rest }: CheckBoxProps) => {
             onColor='#00d75d'
           />
         )}
-        {...rest}
-      ></Field>
+      </Field>
       <ErrorMessage name={name}>
         {(error) => <TextError>{error}</TextError>}
       </ErrorMessage>
