@@ -49,13 +49,21 @@ interface AppProviderProps {
 export const AppContext = createContext<IAppState>(initialState);
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-  const [darkMode, setDarkMode] = useState<boolean>(true);
+  const darkModeStored: string | null = localStorage.getItem('tasks-darkmode');
+  const [darkMode, setDarkMode] = useState<boolean>(
+    darkModeStored === 'true' || darkModeStored === null
+  );
   const [isAddingTask, setIsAddingTask] = useState<boolean>(false);
   const [isEditingTask, setIsEditingTask] = useState<boolean>(false);
   const [todayTasks, setTodayTasks] = useState<ITask[]>([]);
   const [loadingTasks, setLoadingTasks] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
   const [taskToEdit, setTaskToEdit] = useState<ITask | undefined>();
+
+  const setDarkModeStorage = (value: boolean) => {
+    setDarkMode(value);
+    localStorage.setItem('tasks-darkmode', `${value}`);
+  };
 
   const setTodayTasksWithSorting = (tasks: ITask[]) => {
     setTodayTasks(tasks);
@@ -78,7 +86,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     <AppContext.Provider
       value={{
         darkMode,
-        setDarkMode,
+        setDarkMode: setDarkModeStorage,
         isAddingTask,
         setIsAddingTask,
         getAllTasks,
