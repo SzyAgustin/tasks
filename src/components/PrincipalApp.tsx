@@ -5,10 +5,12 @@ import DarkMode from './DarkMode';
 import { AppContext } from '../context/AppContext';
 import styled from 'styled-components';
 import SearchBar from './SearchBar';
+import { UserContext } from '../context/UserContext';
+import SignIn from './SignIn';
 
 const PrincipalApp = () => {
   const { darkMode, getAllTasks } = useContext(AppContext);
-  // const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     getAllTasks();
@@ -17,9 +19,17 @@ const PrincipalApp = () => {
     <Box>
       <AppBox darkMode={darkMode}>
         <Header />
-        <SearchBar />
-        <Section title='Tareas del día' />
-        <DarkMode />
+        {user ? (
+          <>
+            <SearchBar />
+            <Section title='Tareas del día' />
+            <DarkMode />
+          </>
+        ) : (
+          <SignInBox>
+            <SignIn />
+          </SignInBox>
+        )}
       </AppBox>
     </Box>
   );
@@ -43,4 +53,11 @@ const AppBox = styled.div<AppBoxProps>`
   width: 100%;
   height: 100%;
   overflow-y: scroll;
+  overflow-x: hidden;
+`;
+
+const SignInBox = styled.div`
+  display: flex;
+  align-items: center;
+  height: calc(75vh - 80px);
 `;

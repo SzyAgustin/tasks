@@ -1,13 +1,25 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { AppContext } from '../context/AppContext';
+import { UserContext } from '../context/UserContext';
+import Logo from '../images/szy-tasks-logo.png';
+import { userSignOut } from '../services/Firebase';
 
 const Header = () => {
   const { darkMode } = useContext(AppContext);
+  const { user, setUser } = useContext(UserContext);
+
+  const signOut = () => {
+    userSignOut();
+    setUser(undefined);
+    localStorage.removeItem('ecommerce-user');
+  };
+
   return (
-    <HeaderBox darkMode={darkMode}>
-      <p>Mi día</p>
-      <p>Agregar tareas</p>
+    <HeaderBox darkMode={darkMode} userIsLoggedIn={!!user}>
+      <StyledImg src={Logo} alt='logo' />
+
+      {user && <StyledP onClick={signOut}>Sign out</StyledP>}
     </HeaderBox>
   );
 };
@@ -16,6 +28,7 @@ export default Header;
 
 interface HeaderBoxProps {
   darkMode: boolean;
+  userIsLoggedIn: boolean;
 }
 
 const HeaderBox = styled.div<HeaderBoxProps>`
@@ -25,7 +38,7 @@ const HeaderBox = styled.div<HeaderBoxProps>`
   padding: 0 50px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: ${(p) => (p.userIsLoggedIn ? 'space-between' : 'center')};
   color: white;
   /* font-weight: 700; */
   box-shadow: ${(p) =>
@@ -40,4 +53,13 @@ const HeaderBox = styled.div<HeaderBoxProps>`
     p.darkMode
       ? '0px 0px 9px 0px rgba(0, 0, 0, 0.85)'
       : '0px 0px 9px 0px #04224e'};
+`;
+
+const StyledImg = styled.img`
+  width: 40px;
+  height: 40px;
+`;
+
+const StyledP = styled.p`
+  cursor: pointer;
 `;

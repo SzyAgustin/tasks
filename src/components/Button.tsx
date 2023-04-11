@@ -7,13 +7,14 @@ interface ButtonProps {
   margin?: string;
   marginLeft?: string;
   marginRight?: string;
+  padding?: string;
 }
 
 const Button = styled.button<ButtonProps>`
   transition: 0.4s;
   border: 0px;
   ${(p) => p.fontSize && `font-size: ${p.fontSize};`}
-  padding: 6px 10px;
+  padding: ${(p) => p.padding || '6px 10px'};
   border-radius: 3px;
   display: flex;
   align-items: center;
