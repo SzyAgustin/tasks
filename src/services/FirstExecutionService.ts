@@ -8,6 +8,6 @@ export const getLastExecution = (userId: string) => {
 }
 
 export const getLastExecutionSnapshot = async (userId: string) => {
-    const lastExecutionRef = getLastExecution(userId); //TODO: Send userid
+    const lastExecutionRef = getLastExecution(userId);
     return await getDoc(lastExecutionRef);
 } 

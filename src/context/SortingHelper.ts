@@ -2,18 +2,17 @@ import { setDoc } from "firebase/firestore";
 import { ITask } from "../services/TaskService";
 import { getTasksUserSorting, getTasksUserSortingSnapshot } from "../services/SortingService";
 
-export const saveTasksSorting = (tasks: ITask[]) => {
+export const saveTasksSorting = (tasks: ITask[], userId: string) => {
     const ids = tasks.map((task) => task.id);
-    //todo: send user id
-    setDoc(getTasksUserSorting('1'), {
+    setDoc(getTasksUserSorting(userId), {
         sortedList: ids,
-        userId: '1', //TODO, change this when authentication is developed
+        userId,
     }).catch((err) => {
         console.log('err', err); //TODO: agregar toaster para mostrar este error
     });
 };
 
-export const getSortedTasks = async (tasks: ITask[]) => {
+export const getSortedTasks = async (tasks: ITask[], userId: string) => {
     const tasksUserSortingSnap = await getTasksUserSortingSnapshot('1');
     if (tasksUserSortingSnap.exists()) {
         const sorted = tasksUserSortingSnap
@@ -21,6 +20,6 @@ export const getSortedTasks = async (tasks: ITask[]) => {
             .sortedList.map((id: string) => tasks.find((task) => task.id === id));
         return sorted.filter((task: ITask) => task !== undefined);
     }
-    saveTasksSorting(tasks);
+    saveTasksSorting(tasks, userId);
     return tasks;
 };

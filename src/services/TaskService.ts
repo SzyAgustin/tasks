@@ -14,12 +14,12 @@ export interface ITask extends ILocalTask {
 
 const TaskList = "Task";
 
-export const getTasks = () => {
-  return query(collection(db, TaskList)); //TODO: add where clause for userID when it is done
+export const getTasks = (userId: string) => {
+  return query(collection(db, TaskList), where("userId", "==", userId));
 }
 
-export const getDoneTasks = () => {
-  return query(collection(db, TaskList), where("done", "==", true)); //TODO: add where clause for userID when it is done
+export const getDoneTasks = (userId: string) => {
+  return query(collection(db, TaskList), where("done", "==", true), where("userId", "==", userId));
 }
 
 export const getTaskList = () => {
@@ -49,9 +49,9 @@ export const editTask = (taskId: string, task: ILocalTask) => {
   })
 }
 
-export const cleanDoneTasks = async () => {
+export const cleanDoneTasks = async (userId: string) => {
   const batch = writeBatch(db);
-  var doneTasksQuery = getDoneTasks();
+  var doneTasksQuery = getDoneTasks(userId);
   const doneTasksSnap = await getDocs(doneTasksQuery);
   doneTasksSnap.docs.map(task => task.data().isPeriodic ?
     batch.update(getTask(task.id), { 'done': false })

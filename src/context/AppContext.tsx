@@ -1,8 +1,9 @@
-import React, { createContext, useState, useCallback } from 'react';
+import React, { createContext, useState, useCallback, useContext } from 'react';
 import { ITask, getTasks } from '../services/TaskService';
 import { getDocs } from 'firebase/firestore';
 import { dailyFirstExecutionCleanUp } from './LastExecutionHelper';
 import { getSortedTasks, saveTasksSorting } from './SortingHelper';
+import { UserContext } from './UserContext';
 
 interface IAppState {
   darkMode: boolean;
@@ -49,6 +50,7 @@ interface AppProviderProps {
 export const AppContext = createContext<IAppState>(initialState);
 
 export const AppProvider = ({ children }: AppProviderProps) => {
+  const { user } = useContext(UserContext);
   const darkModeStored: string | null = localStorage.getItem('tasks-darkmode');
   const [darkMode, setDarkMode] = useState<boolean>(
     darkModeStored === 'true' || darkModeStored === null
@@ -67,17 +69,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   const setTodayTasksWithSorting = (tasks: ITask[]) => {
     setTodayTasks(tasks);
-    saveTasksSorting(tasks);
+    saveTasksSorting(tasks, user?.uid!);
   };
 
   const getAllTasks = useCallback(async () => {
     setLoadingTasks(true);
-    await dailyFirstExecutionCleanUp();
-    const allTasksSnapshot = await getDocs(getTasks());
+    await dailyFirstExecutionCleanUp(user?.uid!);
+    const allTasksSnapshot = await getDocs(getTasks(user?.uid!));
     const todayTasks = allTasksSnapshot.docs.map(
       (doc) => ({ id: doc.id, ...doc.data() } as ITask)
     );
-    const todayTasksSorted = await getSortedTasks(todayTasks);
+    const todayTasksSorted = await getSortedTasks(todayTasks, user?.uid!);
     setTodayTasks(todayTasksSorted);
     setLoadingTasks(false);
   }, []);

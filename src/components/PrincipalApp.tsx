@@ -13,8 +13,8 @@ const PrincipalApp = () => {
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    getAllTasks();
-  }, [getAllTasks]);
+    user && getAllTasks();
+  }, [getAllTasks, user]);
   return (
     <Box>
       <AppBox darkMode={darkMode}>

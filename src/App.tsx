@@ -8,11 +8,11 @@ Modal.setAppElement('#root');
 
 function App() {
   return (
-    <AppProvider>
-      <UserProvider>
+    <UserProvider>
+      <AppProvider>
         <PrincipalApp />
-      </UserProvider>
-    </AppProvider>
+      </AppProvider>
+    </UserProvider>
   );
 }
 

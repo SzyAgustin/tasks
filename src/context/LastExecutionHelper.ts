@@ -3,11 +3,12 @@ import { getLastExecution } from "../services/FirstExecutionService";
 import { cleanDoneTasks } from "../services/TaskService";
 
 export const setLastExecution = (
-    lastExecutionRef: DocumentReference<DocumentData>
+    lastExecutionRef: DocumentReference<DocumentData>,
+    userId: string
 ) => {
     setDoc(lastExecutionRef, {
         lastExecution: getTodaysDate(),
-        userId: '1', //TODO, change this when authentication is developed
+        userId,
     })
         .then((res) => { })
         .catch((err) => {
@@ -21,14 +22,14 @@ export const getTodaysDate = () => {
     return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 };
 
-export const dailyFirstExecutionCleanUp = async () => {
-    const lastExecutionRef = getLastExecution('1'); //TODO: Send userid
+export const dailyFirstExecutionCleanUp = async (userId: string) => {
+    const lastExecutionRef = getLastExecution(userId);
     const lastExecutionSnap = await getDoc(lastExecutionRef);
     if (
         lastExecutionSnap.exists() &&
         lastExecutionSnap.data().lastExecution !== getTodaysDate()
     ) {
-        await cleanDoneTasks();
+        await cleanDoneTasks(userId);
     }
-    setLastExecution(lastExecutionRef);
+    setLastExecution(lastExecutionRef, userId);
 };
