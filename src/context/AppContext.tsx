@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useCallback } from 'react';
 import { ITask, getTasks } from '../services/TaskService';
 import { getDocs } from 'firebase/firestore';
 import { dailyFirstExecutionCleanUp } from './LastExecutionHelper';
@@ -62,7 +62,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     saveTasksSorting(tasks);
   };
 
-  const getAllTasks = async () => {
+  const getAllTasks = useCallback(async () => {
     setLoadingTasks(true);
     await dailyFirstExecutionCleanUp();
     const allTasksSnapshot = await getDocs(getTasks());
@@ -72,7 +72,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     const todayTasksSorted = await getSortedTasks(todayTasks);
     setTodayTasks(todayTasksSorted);
     setLoadingTasks(false);
-  };
+  }, []);
 
   return (
     <AppContext.Provider

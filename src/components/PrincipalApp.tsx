@@ -8,11 +8,11 @@ import SearchBar from './SearchBar';
 
 const PrincipalApp = () => {
   const { darkMode, getAllTasks } = useContext(AppContext);
+  // const { user } = useContext(UserContext);
 
   useEffect(() => {
     getAllTasks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getAllTasks]);
   return (
     <Box>
       <AppBox darkMode={darkMode}>
