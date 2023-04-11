@@ -23,7 +23,7 @@ const ModalButton = ({
 
   const getButtonText = () => {
     if (isDeletion) return 'Eliminar';
-    return taskToEdit ? 'Editar' : 'Agregar';
+    return taskToEdit ? 'Guardar' : 'Agregar';
   };
 
   const handleClick = () => {

@@ -45,7 +45,6 @@ const CheckBoxDiv = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
-  min-height: 75px;
 `;
 
 const StyledLabel = styled.label`

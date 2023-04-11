@@ -13,6 +13,7 @@ import CheckBox from '../form/CheckBox';
 import ModalButton from '../ModalButton';
 import { AppContext } from '../../context/AppContext';
 import { UserContext } from '../../context/UserContext';
+import PeriodicSelection from './PeriodicSelection';
 
 interface AddEditFormProps {
   closeModal: () => void;
@@ -38,6 +39,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
     done: taskToEdit?.done || false,
     isPeriodic: taskToEdit?.isPeriodic || false,
     userId: user?.uid!,
+    periodicSelection: undefined,
   };
 
   const validationSchema = Yup.object({
@@ -119,25 +121,29 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
       initialValues={initialValues}
       validationSchema={validationSchema}
     >
-      {(formik) => (
-        <Form>
-          <Input name='title' label='Titulo' />
-          <Input name='description' label='Descripcion' />
-          {taskToEdit && <CheckBox name='done' label='Completada' />}
-          <CheckBox name='isPeriodic' label='Es periodica?' />
-          <FormFooter darkMode={darkMode}>
-            <ModalButton loading={loading} success={success} />
-            {taskToEdit && (
-              <ModalButton
-                loading={deleting}
-                success={deleted}
-                onClick={handleDelete}
-                isDeletion
-              />
-            )}
-          </FormFooter>
-        </Form>
-      )}
+      {(formik) => {
+        console.log(formik.values);
+        return (
+          <Form>
+            <Input name='title' label='Titulo' />
+            <Input name='description' label='Descripcion' />
+            {taskToEdit && <CheckBox name='done' label='Completada' />}
+            <CheckBox name='isPeriodic' label='Es periodica?' />
+            {formik.values.isPeriodic && <PeriodicSelection />}
+            <FormFooter darkMode={darkMode}>
+              <ModalButton loading={loading} success={success} />
+              {taskToEdit && (
+                <ModalButton
+                  loading={deleting}
+                  success={deleted}
+                  onClick={handleDelete}
+                  isDeletion
+                />
+              )}
+            </FormFooter>
+          </Form>
+        );
+      }}
     </Formik>
   );
 };

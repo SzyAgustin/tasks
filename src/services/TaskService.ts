@@ -7,6 +7,7 @@ export interface ILocalTask {
   description?: string;
   isPeriodic?: boolean;
   userId: string;
+  periodicSelection?: number[];
 }
 
 export interface ITask extends ILocalTask {
