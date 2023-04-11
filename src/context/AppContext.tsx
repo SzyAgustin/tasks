@@ -2,7 +2,7 @@ import React, { createContext, useState, useCallback, useContext } from 'react';
 import { ITask, getTasks } from '../services/TaskService';
 import { getDocs } from 'firebase/firestore';
 import { dailyFirstExecutionCleanUp } from './LastExecutionHelper';
-import { getSortedTasks, saveTasksSorting } from './SortingHelper';
+import { saveTasksSorting, sortUserTasks } from './SortingHelper';
 import { UserContext } from './UserContext';
 
 interface IAppState {
@@ -79,7 +79,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     const todayTasks = allTasksSnapshot.docs.map(
       (doc) => ({ id: doc.id, ...doc.data() } as ITask)
     );
-    const todayTasksSorted = await getSortedTasks(todayTasks, user?.uid!);
+    const todayTasksSorted = await sortUserTasks(todayTasks, user?.uid!);
     setTodayTasks(todayTasksSorted);
     setLoadingTasks(false);
   }, []);
@@ -92,7 +92,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         isAddingTask,
         setIsAddingTask,
         getAllTasks,
-        todayTasks,
+        todayTasks: todayTasks.filter((task) =>
+          task.title.toLowerCase().includes(searchValue.toLowerCase())
+        ),
         setTodayTasks,
         loadingTasks,
         setLoadingTasks,

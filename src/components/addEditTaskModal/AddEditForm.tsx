@@ -12,6 +12,7 @@ import Input from '../form/Input';
 import CheckBox from '../form/CheckBox';
 import ModalButton from '../ModalButton';
 import { AppContext } from '../../context/AppContext';
+import { UserContext } from '../../context/UserContext';
 
 interface AddEditFormProps {
   closeModal: () => void;
@@ -28,12 +29,15 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
     todayTasks,
     taskToEdit,
     setTodayTasksWithSorting,
+    setSearchValue,
   } = useContext(AppContext);
+  const { user } = useContext(UserContext);
   const initialValues = {
     title: taskToEdit?.title || '',
     description: taskToEdit?.description || '',
     done: taskToEdit?.done || false,
     isPeriodic: taskToEdit?.isPeriodic || false,
+    userId: user?.uid!,
   };
 
   const validationSchema = Yup.object({
@@ -70,6 +74,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
   };
 
   const onSubmit = (task: ILocalTask) => {
+    setSearchValue('');
     setLoading(true);
     taskToEdit ? handleEdit(taskToEdit.id, task) : handleAdd(task);
   };

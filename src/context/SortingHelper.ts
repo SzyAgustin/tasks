@@ -12,7 +12,7 @@ export const saveTasksSorting = (tasks: ITask[], userId: string) => {
     });
 };
 
-export const getSortedTasks = async (tasks: ITask[], userId: string) => {
+export const sortUserTasks = async (tasks: ITask[], userId: string) => {
     const tasksUserSortingSnap = await getTasksUserSortingSnapshot('1');
     if (tasksUserSortingSnap.exists()) {
         const sorted = tasksUserSortingSnap

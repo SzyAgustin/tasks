@@ -9,10 +9,14 @@ interface DragNDropListProps {
 }
 
 const DragNDropList = ({ tasksList }: DragNDropListProps) => {
-  const { setTodayTasksWithSorting } = useContext(AppContext);
+  const { setTodayTasksWithSorting, searchValue } = useContext(AppContext);
 
   const onDragEnd = (res: any) => {
     if (!res.destination) return;
+    if (searchValue !== '') {
+      //TODO: throw toaster error when it is added
+      return;
+    }
     const { source, destination } = res;
     const copiedTasks = tasksList;
     const [removed] = copiedTasks.splice(source.index, 1);

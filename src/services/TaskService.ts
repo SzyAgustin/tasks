@@ -6,6 +6,7 @@ export interface ILocalTask {
   done: boolean;
   description?: string;
   isPeriodic?: boolean;
+  userId: string;
 }
 
 export interface ITask extends ILocalTask {
