@@ -20,6 +20,16 @@ export const getTasks = (userId: string) => {
   return query(collection(db, TaskList), where("userId", "==", userId));
 }
 
+export const getTodayTasks = async (userId: string) => {
+  const allTasksSnapshot = await getDocs(getTasks(userId));
+  const allTasks = allTasksSnapshot.docs.map(
+    (doc) => ({ id: doc.id, ...doc.data() } as ITask)
+  );
+  const today = new Date().getDay();
+  const todayTasks = allTasks.filter(task => !task.isPeriodic || !task.periodicSelection || task.periodicSelection.length === 0 || task.periodicSelection.includes(today))
+  return todayTasks;
+}
+
 export const getDoneTasks = (userId: string) => {
   return query(collection(db, TaskList), where("done", "==", true), where("userId", "==", userId));
 }

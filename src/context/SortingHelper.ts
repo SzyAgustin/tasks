@@ -14,12 +14,12 @@ export const saveTasksSorting = (tasks: ITask[], userId: string) => {
 
 export const sortUserTasks = async (tasks: ITask[], userId: string) => {
     const tasksUserSortingSnap = await getTasksUserSortingSnapshot(userId);
-    if (tasksUserSortingSnap.exists()) {
-        const sorted = tasksUserSortingSnap
-            .data()
-            .sortedList.map((id: string) => tasks.find((task) => task.id === id));
-        return sorted.filter((task: ITask) => task !== undefined);
+    if (!tasksUserSortingSnap.exists()) {
+        saveTasksSorting(tasks, userId);
+        return tasks;
     }
-    saveTasksSorting(tasks, userId);
-    return tasks;
+    const sortedIds = tasksUserSortingSnap.data().sortedList;
+    const idsNotInSorted = tasks.filter(task => !sortedIds.includes(task.id)).map(task => task.id);
+    const sortedTasks = sortedIds.concat(idsNotInSorted).map((id: string) => tasks.find((task) => task.id === id));
+    return sortedTasks.filter((task: ITask) => task !== undefined);
 };

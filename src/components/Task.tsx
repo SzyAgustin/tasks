@@ -10,8 +10,10 @@ interface TaskProps {
   task: ITask;
 }
 
+var dayOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 const Task = ({ task }: TaskProps) => {
-  const { id, title, done, isPeriodic } = task;
+  const { id, title, done, isPeriodic, periodicSelection } = task;
   const {
     darkMode,
     todayTasks,
@@ -20,6 +22,12 @@ const Task = ({ task }: TaskProps) => {
     setTaskToEdit,
   } = useContext(AppContext);
   const [loadingTaskChange, setLoadingTaskChange] = useState<boolean>(false);
+
+  const getPeriodicString = () => {
+    return periodicSelection
+      ? periodicSelection.map((day) => dayOfWeek[day]).join(', ')
+      : '';
+  };
 
   const setTask = (id: string, value: boolean) => {
     setLoadingTaskChange(true);
@@ -48,9 +56,15 @@ const Task = ({ task }: TaskProps) => {
 
   return (
     <TaskBox darkMode={darkMode}>
-      <p style={{ width: '90%' }} onClick={handleClick}>
+      <Title style={{ width: '90%' }} onClick={handleClick}>
         {title} {isPeriodic && <StyledRiRepeatFill color='#00d75d' />}
-      </p>
+        <PeriodicString>
+          {isPeriodic &&
+            periodicSelection &&
+            periodicSelection.length > 0 &&
+            `(${getPeriodicString()})`}
+        </PeriodicString>
+      </Title>
       <Switch
         onChange={() => setTask(id, !done)}
         checked={done}
@@ -66,6 +80,12 @@ export default Task;
 interface TaskBoxProps {
   darkMode: boolean;
 }
+
+const Title = styled.p`
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+`;
 
 export const TaskBox = styled.div<TaskBoxProps>`
   transition: 0.1s;
@@ -86,5 +106,11 @@ export const TaskBox = styled.div<TaskBoxProps>`
 
 const StyledRiRepeatFill = styled(RiRepeatFill)`
   margin-bottom: -3px;
+  margin-left: 5px;
   /* color: red; */
+`;
+
+const PeriodicString = styled.p`
+  margin-left: 5px;
+  font-style: oblique;
 `;

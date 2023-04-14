@@ -20,10 +20,6 @@ interface AddEditFormProps {
 }
 
 const AddEditForm = ({ closeModal }: AddEditFormProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [deleting, setDeleting] = useState<boolean>(false);
-  const [deleted, setDeleted] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean>(false);
   const {
     darkMode,
     setTodayTasks,
@@ -32,6 +28,13 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
     setTodayTasksWithSorting,
     setSearchValue,
   } = useContext(AppContext);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const [deleted, setDeleted] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
+  const [periodicSelection, setPeriodicSelection] = useState<number[]>(
+    taskToEdit?.periodicSelection || []
+  );
   const { user } = useContext(UserContext);
   const initialValues = {
     title: taskToEdit?.title || '',
@@ -39,7 +42,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
     done: taskToEdit?.done || false,
     isPeriodic: taskToEdit?.isPeriodic || false,
     userId: user?.uid!,
-    periodicSelection: undefined,
+    periodicSelection: [],
   };
 
   const validationSchema = Yup.object({
@@ -54,6 +57,13 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
       closeModal();
       setSuccess(false);
     }, 1000);
+  };
+
+  const getCurrentTask = (task: ILocalTask) => {
+    return {
+      ...task,
+      periodicSelection,
+    };
   };
 
   const handleEdit = (id: string, task: ILocalTask) => {
@@ -76,16 +86,24 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
   };
 
   const onSubmit = (task: ILocalTask) => {
+    const currentTask = getCurrentTask(task);
     setSearchValue('');
     setLoading(true);
-    taskToEdit ? handleEdit(taskToEdit.id, task) : handleAdd(task);
+    taskToEdit
+      ? handleEdit(taskToEdit.id, currentTask)
+      : handleAdd(currentTask);
   };
 
   const handleAdd = (task: ILocalTask) => {
     addTask(task)
       .then((res) => {
         setSuccess(true);
-        setTodayTasksWithSorting([...todayTasks, { ...task, id: res.id }]);
+        const isForToday =
+          !task.isPeriodic ||
+          task.periodicSelection?.length === 0 ||
+          task.periodicSelection?.includes(new Date().getDay());
+        isForToday &&
+          setTodayTasksWithSorting([...todayTasks, { ...task, id: res.id }]);
       })
       .catch((err) => {
         setLoading(false);
@@ -122,14 +140,18 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
       validationSchema={validationSchema}
     >
       {(formik) => {
-        console.log(formik.values);
         return (
           <Form>
             <Input name='title' label='Titulo' />
             <Input name='description' label='Descripcion' />
             {taskToEdit && <CheckBox name='done' label='Completada' />}
             <CheckBox name='isPeriodic' label='Es periodica?' />
-            {formik.values.isPeriodic && <PeriodicSelection />}
+            {formik.values.isPeriodic && (
+              <PeriodicSelection
+                periodicSelection={periodicSelection}
+                setPeriodicSelection={setPeriodicSelection}
+              />
+            )}
             <FormFooter darkMode={darkMode}>
               <ModalButton loading={loading} success={success} />
               {taskToEdit && (

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback, useContext } from 'react';
-import { ITask, getTasks } from '../services/TaskService';
+import { ITask, getTasks, getTodayTasks } from '../services/TaskService';
 import { getDocs } from 'firebase/firestore';
 import { dailyFirstExecutionCleanUp } from './LastExecutionHelper';
 import { saveTasksSorting, sortUserTasks } from './SortingHelper';
@@ -75,10 +75,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const getAllTasks = useCallback(async () => {
     setLoadingTasks(true);
     await dailyFirstExecutionCleanUp(user?.uid!);
-    const allTasksSnapshot = await getDocs(getTasks(user?.uid!));
-    const todayTasks = allTasksSnapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as ITask)
-    );
+    const todayTasks = await getTodayTasks(user?.uid!);
     const todayTasksSorted = await sortUserTasks(todayTasks, user?.uid!);
     setTodayTasks(todayTasksSorted);
     setLoadingTasks(false);

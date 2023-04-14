@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const allDays: number[] = [1, 2, 3, 4, 5, 6, 7];
+interface PeriodicSelectionProps {
+  periodicSelection: number[];
+  setPeriodicSelection: (x: number[]) => void;
+}
 
-const PeriodicSelection = () => {
-  const [periodicSelection, setPeriodicSelection] = useState<number[]>([]);
-
+const PeriodicSelection = ({
+  periodicSelection,
+  setPeriodicSelection,
+}: PeriodicSelectionProps) => {
   const isDaySelected = (dayId: number) => {
     return periodicSelection.length === 0 || periodicSelection.includes(dayId);
   };
 
-  console.log('periodicSelection', periodicSelection);
-
   const selectDay = (dayId: number) => {
     console.log('dayId', dayId);
-    if (dayId === 0) {
-      console.log(1);
+    if (dayId === 7) {
       setPeriodicSelection([]);
       return;
     }
@@ -35,7 +36,7 @@ const PeriodicSelection = () => {
     <PeriodicSelectionBox>
       <DayCheckBoxAll
         isSelected={periodicSelection.length === 0}
-        onClick={() => selectDay(0)}
+        onClick={() => selectDay(7)}
       >
         Todos
       </DayCheckBoxAll>
@@ -57,7 +58,7 @@ const PeriodicSelection = () => {
       <DayCheckBox isSelected={isDaySelected(6)} onClick={() => selectDay(6)}>
         Sab
       </DayCheckBox>
-      <DayCheckBox isSelected={isDaySelected(7)} onClick={() => selectDay(7)}>
+      <DayCheckBox isSelected={isDaySelected(0)} onClick={() => selectDay(0)}>
         Dom
       </DayCheckBox>
     </PeriodicSelectionBox>
