@@ -14,6 +14,7 @@ import ModalButton from '../ModalButton';
 import { AppContext } from '../../context/AppContext';
 import { UserContext } from '../../context/UserContext';
 import PeriodicSelection from './PeriodicSelection';
+import { AddButton } from '../AddTaskButton';
 
 interface AddEditFormProps {
   closeModal: () => void;
@@ -154,6 +155,15 @@ const AddEditForm = ({ closeModal, isIndividualTask }: AddEditFormProps) => {
               {isIndividualTask && (
                 <CheckBox name='isPeriodic' label='Es periodica?' />
               )}
+              {!isIndividualTask && (
+                <AddSubTaskBox>
+                  <SubTaskInputBox>
+                    <Input name='subtask' label='Sub Tarea' />
+                  </SubTaskInputBox>
+                  <AddSubTaskButton darkMode={darkMode}> + </AddSubTaskButton>
+                </AddSubTaskBox>
+              )}
+              {!isIndividualTask && <SubTasks></SubTasks>}
               <SpaceDiv>
                 {formik.values.isPeriodic && (
                   <PeriodicSelection
@@ -201,4 +211,22 @@ const FormInputsBox = styled.div`
   box-sizing: border-box;
   padding: 10px;
   min-height: 310px;
+`;
+
+const AddSubTaskBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const AddSubTaskButton = styled(AddButton)`
+  margin-top: 15px;
+`;
+
+const SubTaskInputBox = styled.div`
+  width: 90%;
+`;
+
+const SubTasks = styled.div`
+  height: 150px;
+  background-color: gray;
 `;

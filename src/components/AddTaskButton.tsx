@@ -11,7 +11,6 @@ const AddTaskButton = () => {
   return (
     <>
       <AddButton darkMode={darkMode} onClick={() => setIsAddingTask(true)}>
-        {/* {isAddingTask ? '-' : '+'} */}
         <TransitionIcons
           showFirst={!isAddingTask}
           first={<p>{'+'}</p>}
@@ -29,7 +28,7 @@ interface AddButtonProps {
   darkMode: boolean;
 }
 
-const AddButton = styled.button<AddButtonProps>`
+export const AddButton = styled.button<AddButtonProps>`
   transition: 0.4s;
   width: 40px;
   height: 40px;
