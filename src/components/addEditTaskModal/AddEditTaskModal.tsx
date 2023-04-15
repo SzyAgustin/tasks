@@ -15,13 +15,14 @@ const AddEditTaskModal = () => {
     taskToEdit,
     setTaskToEdit,
   } = useContext(AppContext);
-  const [isIndividualTask, setIsIndividualTask] = useState<boolean>(true);
 
   const closeModal = () => {
     setIsAddingTask(false);
     setIsEditingTask(false);
     setTaskToEdit(undefined);
   };
+
+  // handle
 
   return (
     <Modal
@@ -33,15 +34,9 @@ const AddEditTaskModal = () => {
         <TitleBox darkMode={darkMode}>
           {taskToEdit ? 'Editar tarea' : 'Nueva tarea'}
         </TitleBox>
-        <Tabs
-          firstOption={isIndividualTask}
-          setFirstOption={setIsIndividualTask}
-        />
+
         <FormBox>
-          <AddEditForm
-            closeModal={closeModal}
-            isIndividualTask={isIndividualTask}
-          />
+          <AddEditForm closeModal={closeModal} />
         </FormBox>
       </ModalBox>
     </Modal>

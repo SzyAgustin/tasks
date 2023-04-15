@@ -11,6 +11,10 @@ export interface ILocalTask {
   subTasks?: ISubTask[];
 }
 
+export interface IFormTask extends ILocalTask {
+  subTask: string;
+}
+
 export interface ISubTask {
   id: string;
   title: string;

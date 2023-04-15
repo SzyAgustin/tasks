@@ -28,7 +28,7 @@ interface AddButtonProps {
   darkMode: boolean;
 }
 
-export const AddButton = styled.button<AddButtonProps>`
+const AddButton = styled.button<AddButtonProps>`
   transition: 0.4s;
   width: 40px;
   height: 40px;
