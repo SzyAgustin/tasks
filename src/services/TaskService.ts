@@ -8,6 +8,13 @@ export interface ILocalTask {
   isPeriodic?: boolean;
   userId: string;
   periodicSelection?: number[];
+  subTasks?: ISubTask[];
+}
+
+export interface ISubTask {
+  id: string;
+  title: string;
+  done: boolean;
 }
 
 export interface ITask extends ILocalTask {

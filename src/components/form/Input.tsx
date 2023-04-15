@@ -33,6 +33,7 @@ const InputDiv = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
+  margin-bottom: 1em;
   min-height: 75px;
 `;
 
@@ -40,7 +41,7 @@ const StyledField = styled(Field)<InputProps>`
   background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
   padding: 0.5em 1em;
   border-radius: 3px;
-  margin-bottom: 1em;
+  margin-bottom: 3px;
   user-select: none;
   border: none;
   font-size: 16px;

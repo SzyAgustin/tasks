@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Modal from 'react-modal';
 import { AppContext } from '../../context/AppContext';
 import styled from 'styled-components';
 import AddEditForm from './AddEditForm';
+import Tabs from './Tabs';
 
 const AddEditTaskModal = () => {
   const {
@@ -14,6 +15,7 @@ const AddEditTaskModal = () => {
     taskToEdit,
     setTaskToEdit,
   } = useContext(AppContext);
+  const [isIndividualTask, setIsIndividualTask] = useState<boolean>(true);
 
   const closeModal = () => {
     setIsAddingTask(false);
@@ -31,8 +33,15 @@ const AddEditTaskModal = () => {
         <TitleBox darkMode={darkMode}>
           {taskToEdit ? 'Editar tarea' : 'Nueva tarea'}
         </TitleBox>
+        <Tabs
+          firstOption={isIndividualTask}
+          setFirstOption={setIsIndividualTask}
+        />
         <FormBox>
-          <AddEditForm closeModal={closeModal} />
+          <AddEditForm
+            closeModal={closeModal}
+            isIndividualTask={isIndividualTask}
+          />
         </FormBox>
       </ModalBox>
     </Modal>

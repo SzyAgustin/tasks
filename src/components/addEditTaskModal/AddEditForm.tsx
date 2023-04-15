@@ -17,9 +17,10 @@ import PeriodicSelection from './PeriodicSelection';
 
 interface AddEditFormProps {
   closeModal: () => void;
+  isIndividualTask: boolean;
 }
 
-const AddEditForm = ({ closeModal }: AddEditFormProps) => {
+const AddEditForm = ({ closeModal, isIndividualTask }: AddEditFormProps) => {
   const {
     darkMode,
     setTodayTasks,
@@ -46,7 +47,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
   };
 
   const validationSchema = Yup.object({
-    title: Yup.string().required('Required'),
+    title: Yup.string().required('Obligatorio'),
   });
 
   const timeoutClose = () => {
@@ -142,16 +143,26 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
       {(formik) => {
         return (
           <Form>
-            <Input name='title' label='Titulo' />
-            <Input name='description' label='Descripcion' />
-            {taskToEdit && <CheckBox name='done' label='Completada' />}
-            <CheckBox name='isPeriodic' label='Es periodica?' />
-            {formik.values.isPeriodic && (
-              <PeriodicSelection
-                periodicSelection={periodicSelection}
-                setPeriodicSelection={setPeriodicSelection}
-              />
-            )}
+            <FormInputsBox>
+              <Input name='title' label='Titulo' />
+              {isIndividualTask && (
+                <Input name='description' label='Descripcion' />
+              )}
+              {taskToEdit && isIndividualTask && (
+                <CheckBox name='done' label='Completada' />
+              )}
+              {isIndividualTask && (
+                <CheckBox name='isPeriodic' label='Es periodica?' />
+              )}
+              <SpaceDiv>
+                {formik.values.isPeriodic && (
+                  <PeriodicSelection
+                    periodicSelection={periodicSelection}
+                    setPeriodicSelection={setPeriodicSelection}
+                  />
+                )}
+              </SpaceDiv>
+            </FormInputsBox>
             <FormFooter darkMode={darkMode}>
               <ModalButton loading={loading} success={success} />
               {taskToEdit && (
@@ -180,4 +191,14 @@ const FormFooter = styled.div<DarkModeProps>`
   border-top: 1px solid ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
   padding: 20px 0;
   display: flex;
+`;
+
+const SpaceDiv = styled.div`
+  height: 50px;
+`;
+
+const FormInputsBox = styled.div`
+  box-sizing: border-box;
+  padding: 10px;
+  min-height: 310px;
 `;
