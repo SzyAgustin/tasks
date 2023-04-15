@@ -69,6 +69,7 @@ export const editTask = (taskId: string, task: ILocalTask) => {
     description: task.description,
     done: task.done,
     isPeriodic: task.isPeriodic,
+    periodicSelection: task.periodicSelection
   })
 }
 
