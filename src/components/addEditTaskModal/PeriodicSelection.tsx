@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 interface PeriodicSelectionProps {
@@ -15,7 +15,6 @@ const PeriodicSelection = ({
   };
 
   const selectDay = (dayId: number) => {
-    console.log('dayId', dayId);
     if (dayId === 7) {
       setPeriodicSelection([]);
       return;

@@ -10,17 +10,31 @@ interface Props {
 }
 
 const Section = ({ title }: Props) => {
-  const { loadingTasks, todayTasks } = useContext(AppContext);
+  const { loadingTasks, todayTasks, justTodayTasks, setJustTodayTasks } =
+    useContext(AppContext);
+
   const amountOfDone = todayTasks.filter((task) => task.done).length;
   const amountOfTasks = todayTasks.length;
   return (
     <SectionBox>
-      <TitleBox>
-        <h2>
-          {title} {!loadingTasks && `(${amountOfDone} de ${amountOfTasks})`}
-        </h2>
+      <SectionHeader>
+        <div>
+          <Title>
+            {title} {!loadingTasks && `(${amountOfDone} de ${amountOfTasks})`}
+          </Title>
+          <JustTodayBox>
+            <CheckBoxStyled
+              type='checkbox'
+              checked={justTodayTasks}
+              onChange={() => setJustTodayTasks(!justTodayTasks)}
+            />
+            <p onClick={() => setJustTodayTasks(!justTodayTasks)}>
+              Solo tareas de hoy
+            </p>
+          </JustTodayBox>
+        </div>
         <AddTaskButton />
-      </TitleBox>
+      </SectionHeader>
       <TasksBox>{loadingTasks ? <Loading /> : <TaskList />}</TasksBox>
     </SectionBox>
   );
@@ -28,7 +42,7 @@ const Section = ({ title }: Props) => {
 
 export default Section;
 
-const TitleBox = styled.div`
+const SectionHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -43,4 +57,21 @@ const SectionBox = styled.div`
 const TasksBox = styled.div`
   margin: 0 auto;
   width: 80%;
+`;
+
+const JustTodayBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px 0 15px 0;
+  cursor: pointer;
+  user-select: none;
+`;
+
+const CheckBoxStyled = styled.input`
+  margin-bottom: -1px;
+  cursor: pointer;
+`;
+
+const Title = styled.h2`
+  margin-bottom: 0;
 `;

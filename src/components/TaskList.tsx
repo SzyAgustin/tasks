@@ -14,9 +14,6 @@ const TaskList = () => {
             : 'Aún no tienes tareas para el dia de hoy. Agrega una!'}
         </FlexCenterBox>
       )}
-      {/* {todayTasks.map((task) => (
-        <Task key={task.id} task={task} />
-      ))} */}
       <DragNDropList tasksList={todayTasks} />
     </>
   );

@@ -9,12 +9,12 @@ import { UserContext } from '../context/UserContext';
 import SignIn from './SignIn';
 
 const PrincipalApp = () => {
-  const { darkMode, getAllTasks } = useContext(AppContext);
+  const { darkMode, getTasksSorted } = useContext(AppContext);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    user && getAllTasks();
-  }, [getAllTasks, user]);
+    user && getTasksSorted();
+  }, [getTasksSorted, user]);
   return (
     <Box>
       <AppBox darkMode={darkMode}>

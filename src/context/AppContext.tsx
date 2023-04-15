@@ -1,6 +1,5 @@
 import React, { createContext, useState, useCallback, useContext } from 'react';
-import { ITask, getTasks, getTodayTasks } from '../services/TaskService';
-import { getDocs } from 'firebase/firestore';
+import { ITask, getAllTasks, getJustTodayTasks } from '../services/TaskService';
 import { dailyFirstExecutionCleanUp } from './LastExecutionHelper';
 import { saveTasksSorting, sortUserTasks } from './SortingHelper';
 import { UserContext } from './UserContext';
@@ -8,6 +7,8 @@ import { UserContext } from './UserContext';
 interface IAppState {
   darkMode: boolean;
   setDarkMode: (x: boolean) => void;
+  justTodayTasks: boolean;
+  setJustTodayTasks: (x: boolean) => void;
   searchValue: string;
   setSearchValue: (x: string) => void;
   loadingTasks: boolean;
@@ -18,7 +19,7 @@ interface IAppState {
   setIsAddingTask: (x: boolean) => void;
   isEditingTask: boolean;
   setIsEditingTask: (x: boolean) => void;
-  getAllTasks: () => void;
+  getTasksSorted: () => void;
   taskToEdit?: ITask;
   setTaskToEdit: (task: ITask | undefined) => void;
   setTodayTasksWithSorting: (x: ITask[]) => void;
@@ -27,13 +28,15 @@ interface IAppState {
 const initialState: IAppState = {
   darkMode: true,
   setDarkMode: (x: boolean) => {},
+  justTodayTasks: true,
+  setJustTodayTasks: (x: boolean) => {},
   loadingTasks: true,
   setLoadingTasks: (x: boolean) => {},
   isAddingTask: false,
   setIsAddingTask: (x: boolean) => {},
   isEditingTask: false,
   setIsEditingTask: (x: boolean) => {},
-  getAllTasks: () => {},
+  getTasksSorted: () => {},
   todayTasks: [],
   setTodayTasks: () => {},
   searchValue: '',
@@ -61,6 +64,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [loadingTasks, setLoadingTasks] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
   const [taskToEdit, setTaskToEdit] = useState<ITask | undefined>();
+  const [justTodayTasks, setJustTodayTasks] = useState<boolean>(true);
 
   const setDarkModeStorage = (value: boolean) => {
     setDarkMode(value);
@@ -72,14 +76,27 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     saveTasksSorting(tasks, user?.uid!);
   };
 
-  const getAllTasks = useCallback(async () => {
+  const getTasksSorted = useCallback(async () => {
     setLoadingTasks(true);
     await dailyFirstExecutionCleanUp(user?.uid!);
-    const todayTasks = await getTodayTasks(user?.uid!);
-    const todayTasksSorted = await sortUserTasks(todayTasks, user?.uid!);
-    setTodayTasks(todayTasksSorted);
+    const tasks = justTodayTasks
+      ? await getJustTodayTasks(user?.uid!)
+      : await getAllTasks(user?.uid!);
+    const tasksSorted = await sortUserTasks(tasks, user?.uid!);
+    setTodayTasks(tasksSorted);
     setLoadingTasks(false);
-  }, [user?.uid]);
+  }, [user?.uid, justTodayTasks]);
+
+  const todayTasksFiltered = () => {
+    let tasksToReturn = todayTasks;
+    tasksToReturn =
+      searchValue !== ''
+        ? tasksToReturn.filter((task) =>
+            task.title.toLowerCase().includes(searchValue.toLowerCase())
+          )
+        : tasksToReturn;
+    return tasksToReturn;
+  };
 
   return (
     <AppContext.Provider
@@ -88,13 +105,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setDarkMode: setDarkModeStorage,
         isAddingTask,
         setIsAddingTask,
-        getAllTasks,
-        todayTasks:
-          searchValue !== ''
-            ? todayTasks.filter((task) =>
-                task.title.toLowerCase().includes(searchValue.toLowerCase())
-              )
-            : todayTasks,
+        getTasksSorted,
+        todayTasks: todayTasksFiltered(),
         setTodayTasks,
         loadingTasks,
         setLoadingTasks,
@@ -105,6 +117,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         taskToEdit,
         setTaskToEdit,
         setTodayTasksWithSorting,
+        justTodayTasks,
+        setJustTodayTasks,
       }}
     >
       {children}

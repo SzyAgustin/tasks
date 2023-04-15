@@ -20,14 +20,25 @@ export const getTasks = (userId: string) => {
   return query(collection(db, TaskList), where("userId", "==", userId));
 }
 
-export const getTodayTasks = async (userId: string) => {
+export const getAllTasks = async (userId: string) => {
   const allTasksSnapshot = await getDocs(getTasks(userId));
   const allTasks = allTasksSnapshot.docs.map(
     (doc) => ({ id: doc.id, ...doc.data() } as ITask)
   );
+  return allTasks;
+}
+
+export const getJustTodayTasks = async (userId: string) => {
+  const allTasks = await getAllTasks(userId);
   const today = new Date().getDay();
-  const todayTasks = allTasks.filter(task => !task.isPeriodic || !task.periodicSelection || task.periodicSelection.length === 0 || task.periodicSelection.includes(today))
-  return todayTasks;
+  return allTasks.filter(
+    (task) =>
+      !task.isPeriodic ||
+      !task.periodicSelection ||
+      task.periodicSelection.length === 0 ||
+      task.periodicSelection.includes(today)
+  )
+
 }
 
 export const getDoneTasks = (userId: string) => {
