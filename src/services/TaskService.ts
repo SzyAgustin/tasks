@@ -64,13 +64,7 @@ export const deleteTask = (taskId: string) => {
 
 export const editTask = (taskId: string, task: ILocalTask) => {
   const taskRef = getTask(taskId);
-  return updateDoc(taskRef, {
-    title: task.title,
-    description: task.description,
-    done: task.done,
-    isPeriodic: task.isPeriodic,
-    periodicSelection: task.periodicSelection
-  })
+  return updateDoc(taskRef, { ...task })
 }
 
 export const cleanDoneTasks = async (userId: string) => {
