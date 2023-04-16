@@ -19,7 +19,6 @@ import PeriodicSelection from './PeriodicSelection';
 import Tabs from './Tabs';
 import SubTaskForm from './SubTaskForm';
 import { v4 as uuidv4 } from 'uuid';
-import SubTask from '../SubTask';
 
 interface AddEditFormProps {
   closeModal: () => void;

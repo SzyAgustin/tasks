@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { ISubTask, ITask, getTask } from '../services/TaskService';
+import { ISubTask, getTask } from '../services/TaskService';
 import styled from 'styled-components';
 import Switch from 'react-switch';
 import { updateDoc } from 'firebase/firestore';
