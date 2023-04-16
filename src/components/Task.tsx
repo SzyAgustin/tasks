@@ -86,7 +86,9 @@ const Task = ({ task }: TaskProps) => {
       </TaskBox>
       <SubTasksBox darkMode={darkMode} isOpen={isShowingSubTasks}>
         {isShowingSubTasks &&
-          subTasks.map((subTask) => <SubTask subTask={subTask} />)}
+          subTasks.map((subTask) => (
+            <SubTask subTask={subTask} taskId={id} allSubTasks={subTasks} />
+          ))}
       </SubTasksBox>
     </>
   );
@@ -138,11 +140,12 @@ interface SubTasksBoxProps {
 
 const SubTasksBox = styled.div<SubTasksBoxProps>`
   transition: 0.2s;
-  height: ${(p) => (p.isOpen ? '100px' : '0')};
-  max-height: ${(p) => (p.isOpen ? '100px' : '0')};
-  overflow-y: scroll;
+  /* height: ${(p) => (p.isOpen ? '100px' : '0px')}; */
+  /* max-height: ${(p) => (p.isOpen ? '100px' : '0px')}; */
+  /* min-height: ${(p) => (p.isOpen ? '100px' : '0px')}; */
+  /* overflow-y: scroll; */
   background-color: ${(p) => (p.darkMode ? '#424960' : '#006bae32')};
-  ::-webkit-scrollbar {
+  /* ::-webkit-scrollbar {
     width: 7px;
   }
 
@@ -157,7 +160,7 @@ const SubTasksBox = styled.div<SubTasksBoxProps>`
 
   ::-webkit-scrollbar-thumb:hover {
     background: ${(p) => (p.darkMode ? '#bbbbbb' : 'rgb(9, 46, 101)')};
-  }
+  } */
 `;
 
 interface AccordionIconProps {
