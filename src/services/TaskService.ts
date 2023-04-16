@@ -1,5 +1,6 @@
 import { db } from "./Firebase";
 import { collection, doc, query, where, writeBatch, addDoc, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
+import SubTask from '../components/SubTask';
 
 export interface ILocalTask {
   title: string;
@@ -56,13 +57,16 @@ export const getDoneTasks = (userId: string) => {
   return query(collection(db, TaskList), where("done", "==", true), where("userId", "==", userId));
 }
 
+export const getDoneSubTasks = (userId: string) => {
+  return query(collection(db, TaskList), where("userId", "==", userId), where("subTasks.done", "!=", true));
+}
+
 export const getTaskList = () => {
   return collection(db, TaskList);
 }
 
 export const addTask = (task: ILocalTask) => {
   const taskList = getTaskList();
-  console.log(task)
   return addDoc(taskList, task);
 }
 
@@ -81,10 +85,17 @@ export const editTask = (taskId: string, task: ILocalTask) => {
 
 export const cleanDoneTasks = async (userId: string) => {
   const batch = writeBatch(db);
-  var doneTasksQuery = getDoneTasks(userId);
-  const doneTasksSnap = await getDocs(doneTasksQuery);
-  doneTasksSnap.docs.map(task => task.data().isPeriodic ?
-    batch.update(getTask(task.id), { 'done': false })
-    : batch.delete(getTask(task.id)))
+  const allTasksSnapshot = await getDocs(getTasks(userId));
+  allTasksSnapshot.docs.forEach(task => {
+    const taskData = task.data();
+    if (taskData.done) {
+      taskData.isPeriodic ?
+        batch.update(getTask(task.id), { 'done': false })
+        : batch.delete(getTask(task.id))
+    }
+    if (taskData.subTasks.length > 0 && taskData.subTasks.every((st: ISubTask) => st.done)) {
+      batch.delete(getTask(task.id))
+    }
+  })
   await batch.commit();
 }

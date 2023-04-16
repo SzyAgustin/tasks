@@ -58,7 +58,7 @@ const Task = ({ task }: TaskProps) => {
   };
 
   return (
-    <>
+    <TaskBoxContainer darkMode={darkMode}>
       <TaskBox darkMode={darkMode}>
         <Title style={{ width: '90%' }} onClick={handleClick}>
           {title} {isPeriodic && <StyledRiRepeatFill color='#00d75d' />}
@@ -90,7 +90,7 @@ const Task = ({ task }: TaskProps) => {
             <SubTask subTask={subTask} taskId={id} allSubTasks={subTasks} />
           ))}
       </SubTasksBox>
-    </>
+    </TaskBoxContainer>
   );
 };
 
@@ -116,11 +116,6 @@ export const TaskBox = styled.div<TaskBoxProps>`
   border-radius: 3px;
   user-select: none;
   cursor: pointer;
-
-  &:hover {
-    box-shadow: 0px 0px 5px 0px
-      ${(p) => (p.darkMode ? '#ffffffcb' : '#006baee4')};
-  }
 `;
 
 const StyledRiRepeatFill = styled(RiRepeatFill)`
@@ -140,11 +135,11 @@ interface SubTasksBoxProps {
 
 const SubTasksBox = styled.div<SubTasksBoxProps>`
   transition: 0.2s;
+  background-color: ${(p) => (p.darkMode ? '#424960' : '#006bae32')};
   /* height: ${(p) => (p.isOpen ? '100px' : '0px')}; */
   /* max-height: ${(p) => (p.isOpen ? '100px' : '0px')}; */
   /* min-height: ${(p) => (p.isOpen ? '100px' : '0px')}; */
   /* overflow-y: scroll; */
-  background-color: ${(p) => (p.darkMode ? '#424960' : '#006bae32')};
   /* ::-webkit-scrollbar {
     width: 7px;
   }
@@ -179,5 +174,12 @@ const AccordionIconBox = styled.div`
 
   &:hover {
     color: #bbbbbb;
+  }
+`;
+
+const TaskBoxContainer = styled.div<TaskBoxProps>`
+  &:hover {
+    box-shadow: 0px 0px 5px 0px
+      ${(p) => (p.darkMode ? '#ffffffcb' : '#006baee4')};
   }
 `;

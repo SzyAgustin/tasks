@@ -19,6 +19,7 @@ import PeriodicSelection from './PeriodicSelection';
 import Tabs from './Tabs';
 import SubTaskForm from './SubTaskForm';
 import { v4 as uuidv4 } from 'uuid';
+import SubTask from '../SubTask';
 
 interface AddEditFormProps {
   closeModal: () => void;
@@ -84,7 +85,6 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
   const onSubmit = (task: IFormTask) => {
     if (!isIndividualTask && subTasks.length === 0) return;
     const currentTask = getCurrentTask(task);
-    console.log(currentTask);
     setSearchValue('');
     setLoading(true);
     taskToEdit
@@ -223,6 +223,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
                   {subTasks.length > 0 ? (
                     subTasks.map((subTask) => (
                       <SubTaskForm
+                        key={subTask.id}
                         subTask={subTask}
                         deleteTask={handleDeleteTask}
                       />
