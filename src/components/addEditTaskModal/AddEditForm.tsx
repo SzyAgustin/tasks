@@ -86,6 +86,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
   };
 
   const handleAddSubTask = (formik: FormikProps<IFormTask>) => {
+    if (formik.values.subTask === '') return;
     const subTask: ISubTask = {
       id: uuidv4(),
       title: formik.values.subTask,
@@ -183,7 +184,10 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
               }
             />
             <FormInputsBox>
-              <Input name='title' label='Titulo' />
+              <Input
+                name='title'
+                label={isIndividualTask ? 'Titulo' : 'Titulo del grupo'}
+              />
               {isIndividualTask && (
                 <Input name='description' label='Descripcion' />
               )}
@@ -196,7 +200,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
               {!isIndividualTask && (
                 <AddSubTaskBox>
                   <SubTaskInputBox>
-                    <Input name='subTask' label='Sub Tarea' />
+                    <Input name='subTask' label='Tarea' />
                   </SubTaskInputBox>
                   <AddButton
                     darkMode={darkMode}
@@ -218,7 +222,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
                     ))
                   ) : (
                     <SubTasksEmpty>
-                      Agrega al menos una sub tarea.
+                      Agrega al menos una Sub Tarea.
                     </SubTasksEmpty>
                   )}
                 </SubTasks>
