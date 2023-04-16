@@ -8,7 +8,7 @@ export interface ILocalTask {
   isPeriodic?: boolean;
   userId: string;
   periodicSelection?: number[];
-  subTasks?: ISubTask[];
+  subTasks: ISubTask[];
 }
 
 export interface IFormTask extends ILocalTask {
@@ -62,6 +62,7 @@ export const getTaskList = () => {
 
 export const addTask = (task: ILocalTask) => {
   const taskList = getTaskList();
+  console.log(task)
   return addDoc(taskList, task);
 }
 

@@ -5,6 +5,8 @@ import { ITask, getTask } from '../services/TaskService';
 import { updateDoc } from 'firebase/firestore';
 import { AppContext } from '../context/AppContext';
 import { RiRepeatFill } from 'react-icons/ri';
+import { MdOutlineArrowForwardIos } from 'react-icons/md';
+import SubTask from './SubTask';
 
 interface TaskProps {
   task: ITask;
@@ -13,7 +15,7 @@ interface TaskProps {
 var dayOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const Task = ({ task }: TaskProps) => {
-  const { id, title, done, isPeriodic, periodicSelection } = task;
+  const { id, title, done, isPeriodic, periodicSelection, subTasks } = task;
   const {
     darkMode,
     todayTasks,
@@ -22,6 +24,7 @@ const Task = ({ task }: TaskProps) => {
     setTaskToEdit,
   } = useContext(AppContext);
   const [loadingTaskChange, setLoadingTaskChange] = useState<boolean>(false);
+  const [isShowingSubTasks, setIsShowingSubTasks] = useState<boolean>(false);
 
   const getPeriodicString = () => {
     return periodicSelection
@@ -55,23 +58,37 @@ const Task = ({ task }: TaskProps) => {
   };
 
   return (
-    <TaskBox darkMode={darkMode}>
-      <Title style={{ width: '90%' }} onClick={handleClick}>
-        {title} {isPeriodic && <StyledRiRepeatFill color='#00d75d' />}
-        <PeriodicString>
-          {isPeriodic &&
-            periodicSelection &&
-            periodicSelection.length > 0 &&
-            `(${getPeriodicString()})`}
-        </PeriodicString>
-      </Title>
-      <Switch
-        onChange={() => setTask(id, !done)}
-        checked={done}
-        onColor='#00d75d'
-        disabled={loadingTaskChange}
-      />
-    </TaskBox>
+    <>
+      <TaskBox darkMode={darkMode}>
+        <Title style={{ width: '90%' }} onClick={handleClick}>
+          {title} {isPeriodic && <StyledRiRepeatFill color='#00d75d' />}
+          <PeriodicString>
+            {isPeriodic &&
+              periodicSelection &&
+              periodicSelection.length > 0 &&
+              `(${getPeriodicString()})`}
+          </PeriodicString>
+        </Title>
+        {subTasks.length === 0 ? (
+          <Switch
+            onChange={() => setTask(id, !done)}
+            checked={done}
+            onColor='#00d75d'
+            disabled={loadingTaskChange}
+          />
+        ) : (
+          <AccordionIconBox
+            onClick={() => setIsShowingSubTasks(!isShowingSubTasks)}
+          >
+            <AccordionIcon isShowingSubTasks={isShowingSubTasks} />
+          </AccordionIconBox>
+        )}
+      </TaskBox>
+      <SubTasksBox darkMode={darkMode} isOpen={isShowingSubTasks}>
+        {isShowingSubTasks &&
+          subTasks.map((subTask) => <SubTask subTask={subTask} />)}
+      </SubTasksBox>
+    </>
   );
 };
 
@@ -107,10 +124,57 @@ export const TaskBox = styled.div<TaskBoxProps>`
 const StyledRiRepeatFill = styled(RiRepeatFill)`
   margin-bottom: -3px;
   margin-left: 5px;
-  /* color: red; */
 `;
 
 const PeriodicString = styled.p`
   margin-left: 5px;
   font-style: oblique;
+`;
+
+interface SubTasksBoxProps {
+  isOpen: boolean;
+  darkMode: boolean;
+}
+
+const SubTasksBox = styled.div<SubTasksBoxProps>`
+  transition: 0.2s;
+  height: ${(p) => (p.isOpen ? '100px' : '0')};
+  max-height: ${(p) => (p.isOpen ? '100px' : '0')};
+  overflow-y: scroll;
+  background-color: ${(p) => (p.darkMode ? '#424960' : '#006bae32')};
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: ${(p) => (p.darkMode ? 'rgb(4, 34, 78)' : 'white')};
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${(p) => (p.darkMode ? 'white' : 'rgb(4, 34, 78)')};
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${(p) => (p.darkMode ? '#bbbbbb' : 'rgb(9, 46, 101)')};
+  }
+`;
+
+interface AccordionIconProps {
+  isShowingSubTasks: boolean;
+}
+
+const AccordionIcon = styled(MdOutlineArrowForwardIos)<AccordionIconProps>`
+  transition: 0.2s;
+  ${(p) => (p.isShowingSubTasks ? 'transform: rotate(90deg);' : '')};
+`;
+
+const AccordionIconBox = styled.div`
+  width: 5%;
+  display: flex;
+  justify-content: end;
+
+  &:hover {
+    color: #bbbbbb;
+  }
 `;

@@ -33,8 +33,12 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
     setTodayTasksWithSorting,
     setSearchValue,
   } = useContext(AppContext);
-  const [isIndividualTask, setIsIndividualTask] = useState<boolean>(true);
-  const [subTasks, setSubTasks] = useState<ISubTask[] | undefined>();
+  const [isIndividualTask, setIsIndividualTask] = useState<boolean>(
+    taskToEdit && taskToEdit.subTasks.length > 0 ? false : true
+  );
+  const [subTasks, setSubTasks] = useState<ISubTask[]>(
+    taskToEdit ? taskToEdit.subTasks : []
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [deleted, setDeleted] = useState<boolean>(false);
@@ -52,7 +56,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
     userId: user?.uid!,
     periodicSelection: [],
     subTask: '',
-    subTasks: undefined,
+    subTasks: [],
   };
 
   const validationSchema = Yup.object({
@@ -73,11 +77,14 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
     return {
       ...task,
       periodicSelection,
-    };
+      subTasks,
+    } as ILocalTask;
   };
 
   const onSubmit = (task: IFormTask) => {
+    if (!isIndividualTask && subTasks.length === 0) return;
     const currentTask = getCurrentTask(task);
+    console.log(currentTask);
     setSearchValue('');
     setLoading(true);
     taskToEdit
@@ -99,7 +106,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
   const handleTabChange = (formik: FormikProps<IFormTask>, value: boolean) => {
     formik.resetForm();
     setPeriodicSelection([]);
-    setSubTasks(undefined);
+    setSubTasks([]);
     setIsIndividualTask(value);
   };
 
@@ -162,10 +169,8 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
   };
 
   const handleDeleteTask = (id: string) => {
-    const newSubTasks = subTasks?.filter((subTask) => subTask.id !== id);
-    const result =
-      newSubTasks && newSubTasks.length > 0 ? newSubTasks : undefined;
-    setSubTasks(result);
+    const newSubTasks = subTasks.filter((subTask) => subTask.id !== id);
+    setSubTasks(newSubTasks);
   };
 
   return (
@@ -177,12 +182,14 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
       {(formik) => {
         return (
           <Form>
-            <Tabs
-              firstOption={isIndividualTask}
-              setFirstOption={(value: boolean) =>
-                handleTabChange(formik, value)
-              }
-            />
+            {!taskToEdit && (
+              <Tabs
+                firstOption={isIndividualTask}
+                setFirstOption={(value: boolean) =>
+                  handleTabChange(formik, value)
+                }
+              />
+            )}
             <FormInputsBox>
               <Input
                 name='title'
@@ -203,18 +210,18 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
                     <Input name='subTask' label='Tarea' />
                   </SubTaskInputBox>
                   <AddButton
+                    type='button'
                     darkMode={darkMode}
                     onClick={() => handleAddSubTask(formik)}
                   >
-                    {' '}
-                    +{' '}
+                    +
                   </AddButton>
                 </AddSubTaskBox>
               )}
               {!isIndividualTask && (
                 <SubTasks darkMode={darkMode}>
-                  {subTasks && subTasks.length > 0 ? (
-                    subTasks?.map((subTask) => (
+                  {subTasks.length > 0 ? (
+                    subTasks.map((subTask) => (
                       <SubTaskForm
                         subTask={subTask}
                         deleteTask={handleDeleteTask}
@@ -289,6 +296,22 @@ const SubTasks = styled.div<DarkModeProps>`
   height: 150px;
   background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
   overflow-y: scroll;
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: ${(p) => (p.darkMode ? 'rgb(4, 34, 78)' : 'white')};
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${(p) => (p.darkMode ? 'white' : 'rgb(4, 34, 78)')};
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${(p) => (p.darkMode ? '#bbbbbb' : 'rgb(9, 46, 101)')};
+  }
 `;
 
 const AddButton = styled.button<DarkModeProps>`
@@ -313,4 +336,5 @@ const AddButton = styled.button<DarkModeProps>`
 
 const SubTasksEmpty = styled.p`
   padding: 10px 20px;
+  font-style: oblique;
 `;
