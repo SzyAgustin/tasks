@@ -17,6 +17,8 @@ import { AppContext } from '../../context/AppContext';
 import { UserContext } from '../../context/UserContext';
 import PeriodicSelection from './PeriodicSelection';
 import Tabs from './Tabs';
+import SubTaskForm from './SubTaskForm';
+import { v4 as uuidv4 } from 'uuid';
 
 interface AddEditFormProps {
   closeModal: () => void;
@@ -50,6 +52,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
     userId: user?.uid!,
     periodicSelection: [],
     subTask: '',
+    subTasks: undefined,
   };
 
   const validationSchema = Yup.object({
@@ -84,7 +87,7 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
 
   const handleAddSubTask = (formik: FormikProps<IFormTask>) => {
     const subTask: ISubTask = {
-      id: '1', ///
+      id: uuidv4(),
       title: formik.values.subTask,
       done: false,
     };
@@ -157,6 +160,13 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
       });
   };
 
+  const handleDeleteTask = (id: string) => {
+    const newSubTasks = subTasks?.filter((subTask) => subTask.id !== id);
+    const result =
+      newSubTasks && newSubTasks.length > 0 ? newSubTasks : undefined;
+    setSubTasks(result);
+  };
+
   return (
     <Formik
       onSubmit={onSubmit}
@@ -198,10 +208,19 @@ const AddEditForm = ({ closeModal }: AddEditFormProps) => {
                 </AddSubTaskBox>
               )}
               {!isIndividualTask && (
-                <SubTasks>
-                  {subTasks?.map((subTask) => (
-                    <p>{subTask.title}</p>
-                  ))}
+                <SubTasks darkMode={darkMode}>
+                  {subTasks && subTasks.length > 0 ? (
+                    subTasks?.map((subTask) => (
+                      <SubTaskForm
+                        subTask={subTask}
+                        deleteTask={handleDeleteTask}
+                      />
+                    ))
+                  ) : (
+                    <SubTasksEmpty>
+                      Agrega al menos una sub tarea.
+                    </SubTasksEmpty>
+                  )}
                 </SubTasks>
               )}
               <SpaceDiv>
@@ -262,9 +281,9 @@ const SubTaskInputBox = styled.div`
   width: 90%;
 `;
 
-const SubTasks = styled.div`
+const SubTasks = styled.div<DarkModeProps>`
   height: 150px;
-  background-color: gray;
+  background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
   overflow-y: scroll;
 `;
 
@@ -286,4 +305,8 @@ const AddButton = styled.button<DarkModeProps>`
   &:hover {
     background-color: ${(p) => (p.darkMode ? '#2862b9ce' : '#1364dece')};
   }
+`;
+
+const SubTasksEmpty = styled.p`
+  padding: 10px 20px;
 `;
