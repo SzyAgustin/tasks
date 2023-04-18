@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { GrFormClose } from 'react-icons/gr';
 import styled from 'styled-components';
 import { ISubTask } from '../../services/TaskService';
+import { AppContext } from '../../context/AppContext';
 
 interface SubTaskFormProps {
   subTask: ISubTask;
@@ -9,9 +10,10 @@ interface SubTaskFormProps {
 }
 
 const SubTaskForm = ({ subTask, deleteTask }: SubTaskFormProps) => {
+  const { darkMode } = useContext(AppContext);
   const { title, id } = subTask;
   return (
-    <SubTaskBox>
+    <SubTaskBox darkMode={darkMode}>
       <p>{title}</p>
       <Button onClick={() => deleteTask(id)}>
         <GrFormClose />
@@ -22,17 +24,21 @@ const SubTaskForm = ({ subTask, deleteTask }: SubTaskFormProps) => {
 
 export default SubTaskForm;
 
-const SubTaskBox = styled.div`
+interface SubTaskBoxProps {
+  darkMode: boolean;
+}
+
+const SubTaskBox = styled.div<SubTaskBoxProps>`
   transition: 0.2s;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  background-color: #ffffff1c;
+  background-color: ${(p) => (p.darkMode ? '#ffffff1c' : '#006bae23')};
   margin-bottom: 1px;
 
   &:hover {
-    background-color: #ffffff11;
+    background-color: ${(p) => (p.darkMode ? '##ffffff11' : '#006bae11')};
   }
 `;
 

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import TabOption from './TabOption';
+import { AppContext } from '../../context/AppContext';
 
 interface TabsProps {
   firstOption: boolean;
@@ -8,8 +9,9 @@ interface TabsProps {
 }
 
 const Tabs = ({ firstOption, setFirstOption }: TabsProps) => {
+  const { darkMode } = useContext(AppContext);
   return (
-    <TabsOptionsBox>
+    <TabsOptionsBox darkMode={darkMode}>
       <TabOption
         onClick={() => setFirstOption(true)}
         isActive={firstOption}
@@ -26,8 +28,12 @@ const Tabs = ({ firstOption, setFirstOption }: TabsProps) => {
 
 export default Tabs;
 
-const TabsOptionsBox = styled.div`
+interface DarkModeProps {
+  darkMode: boolean;
+}
+
+const TabsOptionsBox = styled.div<DarkModeProps>`
   display: flex;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
   margin-bottom: 15px;
 `;
