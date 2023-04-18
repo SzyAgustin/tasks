@@ -28,7 +28,10 @@ const Task = ({ task }: TaskProps) => {
 
   const getPeriodicString = () => {
     return periodicSelection
-      ? periodicSelection.map((day) => dayOfWeek[day]).join(', ')
+      ? periodicSelection
+          .sort()
+          .map((day) => dayOfWeek[day])
+          .join(', ')
       : '';
   };
 
