@@ -4,6 +4,9 @@ import { AppContext } from '../../context/AppContext';
 import styled from 'styled-components';
 import AddEditForm from './AddEditForm';
 import Tabs from './Tabs';
+import { mediaQueryMaxWidth } from '../constants';
+import { GrFormClose } from 'react-icons/gr';
+import { IconContext } from 'react-icons/lib';
 
 const AddEditTaskModal = () => {
   const {
@@ -25,21 +28,29 @@ const AddEditTaskModal = () => {
   // handle
 
   return (
-    <Modal
-      isOpen={isAddingTask || isEditingTask}
-      onRequestClose={closeModal}
-      style={customStyles(darkMode)}
-    >
-      <ModalBox darkMode={darkMode}>
-        <TitleBox darkMode={darkMode}>
-          {taskToEdit ? 'Editar tarea' : 'Nueva tarea'}
-        </TitleBox>
+    <ModalContainer>
+      <Modal
+        isOpen={isAddingTask || isEditingTask}
+        onRequestClose={closeModal}
+        style={customStyles(darkMode)}
+      >
+        <CloseBox darkMode={darkMode} onClick={closeModal}>
+          <IconContext.Provider value={{ color: '#ffffff' }}>
+            {' '}
+            <GrFormClose />
+          </IconContext.Provider>
+        </CloseBox>
+        <ModalBox darkMode={darkMode}>
+          <TitleBox darkMode={darkMode}>
+            {taskToEdit ? 'Editar tarea' : 'Nueva tarea'}
+          </TitleBox>
 
-        <FormBox>
-          <AddEditForm closeModal={closeModal} />
-        </FormBox>
-      </ModalBox>
-    </Modal>
+          <FormBox>
+            <AddEditForm closeModal={closeModal} />
+          </FormBox>
+        </ModalBox>
+      </Modal>
+    </ModalContainer>
   );
 };
 
@@ -48,6 +59,27 @@ export default AddEditTaskModal;
 interface DarkModeProps {
   darkMode: boolean;
 }
+
+const ModalContainer = styled.div`
+  position: relative;
+`;
+
+const CloseBox = styled.div<DarkModeProps>`
+  position: absolute;
+  top: 5%;
+  right: 10%;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
+
+  @media (min-width: ${mediaQueryMaxWidth}) {
+    visibility: hidden;
+  }
+`;
 
 const TitleBox = styled.div<DarkModeProps>`
   border-bottom: 1px solid ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
@@ -87,4 +119,8 @@ const customStyles = (darkMode: boolean) => ({
 
 const FormBox = styled.div`
   width: 40vw;
+
+  @media (max-width: ${mediaQueryMaxWidth}) {
+    width: 70vw;
+  }
 `;
