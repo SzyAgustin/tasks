@@ -63,8 +63,9 @@ const Task = ({ task }: TaskProps) => {
   return (
     <TaskBoxContainer darkMode={darkMode}>
       <TaskBox darkMode={darkMode}>
-        <Title style={{ width: '90%' }} onClick={handleClick}>
-          {title} {isPeriodic && <StyledRiRepeatFill color='#00d75d' />}
+        <Title onClick={handleClick}>
+          {title}{' '}
+          {isPeriodic && <StyledRiRepeatFill width={'100px'} color='#00d75d' />}
           <PeriodicString>
             {isPeriodic &&
               periodicSelection &&
@@ -103,10 +104,14 @@ interface TaskBoxProps {
   darkMode: boolean;
 }
 
-const Title = styled.p`
+const Title = styled.div`
+  width: calc(80%);
   display: flex;
   align-items: center;
-  /* justify-content: center; */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  min-width: 0;
 `;
 
 export const TaskBox = styled.div<TaskBoxProps>`
@@ -124,6 +129,8 @@ export const TaskBox = styled.div<TaskBoxProps>`
 const StyledRiRepeatFill = styled(RiRepeatFill)`
   margin-bottom: -3px;
   margin-left: 5px;
+  width: 20px;
+  min-width: 20px;
 `;
 
 const PeriodicString = styled.p`
@@ -139,26 +146,6 @@ interface SubTasksBoxProps {
 const SubTasksBox = styled.div<SubTasksBoxProps>`
   transition: 0.2s;
   background-color: ${(p) => (p.darkMode ? '#424960' : '#006bae32')};
-  /* height: ${(p) => (p.isOpen ? '100px' : '0px')}; */
-  /* max-height: ${(p) => (p.isOpen ? '100px' : '0px')}; */
-  /* min-height: ${(p) => (p.isOpen ? '100px' : '0px')}; */
-  /* overflow-y: scroll; */
-  /* ::-webkit-scrollbar {
-    width: 7px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: ${(p) => (p.darkMode ? 'rgb(4, 34, 78)' : 'white')};
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: ${(p) => (p.darkMode ? 'white' : 'rgb(4, 34, 78)')};
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: ${(p) => (p.darkMode ? '#bbbbbb' : 'rgb(9, 46, 101)')};
-  } */
 `;
 
 interface AccordionIconProps {
@@ -171,7 +158,7 @@ const AccordionIcon = styled(MdOutlineArrowForwardIos)<AccordionIconProps>`
 `;
 
 const AccordionIconBox = styled.div`
-  width: 5%;
+  width: 10%;
   display: flex;
   justify-content: end;
 
@@ -179,6 +166,10 @@ const AccordionIconBox = styled.div`
     color: #bbbbbb;
   }
 `;
+
+// const SwitchBox = styled.div`
+//   width: 10%;
+// `;
 
 const TaskBoxContainer = styled.div<TaskBoxProps>`
   &:hover {

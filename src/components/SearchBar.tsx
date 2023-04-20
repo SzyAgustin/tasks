@@ -5,6 +5,7 @@ import { AppContext } from '../context/AppContext';
 import { BiSearch } from 'react-icons/bi';
 import { IoMdClose } from 'react-icons/io';
 import TransitionIcons from './TransitionIcons';
+import { mediaQueryMaxWidth } from './constants';
 
 const SearchBar = () => {
   const { darkMode, searchValue, setSearchValue } = useContext(AppContext);
@@ -35,6 +36,10 @@ export default SearchBar;
 const SearchBarBox = styled.div`
   width: 64%;
   margin: 30px auto;
+
+  @media (max-width: ${mediaQueryMaxWidth}) {
+    width: 85%;
+  }
 `;
 
 interface InputProps {

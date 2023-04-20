@@ -5,6 +5,7 @@ import { FlexCenterBox } from './FlexCenterBox';
 import styled from 'styled-components';
 import { BsMoonFill } from 'react-icons/bs';
 import { BsFillSunFill } from 'react-icons/bs';
+import { mediaQueryMaxWidth } from './constants';
 
 const DarkMode = () => {
   const { darkMode, setDarkMode } = useContext(AppContext);
@@ -45,6 +46,10 @@ const DarkModeBox = styled(FlexCenterBox)`
   position: absolute;
   right: 30px;
   bottom: 20px;
+
+  @media (max-width: ${mediaQueryMaxWidth}) {
+    visibility: hidden;
+  }
 `;
 
 const SwitchBox = styled.div`

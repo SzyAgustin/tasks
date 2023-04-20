@@ -4,6 +4,7 @@ import Loading from './Loading';
 import AddTaskButton from './AddTaskButton';
 import TaskList from './TaskList';
 import { AppContext } from '../context/AppContext';
+import { mediaQueryMaxWidth } from './constants';
 
 interface Props {
   title: string;
@@ -52,11 +53,19 @@ const SectionBox = styled.div`
   width: 80%;
   margin: 0 auto;
   padding-bottom: 70px;
+
+  @media (max-width: ${mediaQueryMaxWidth}) {
+    width: 85%;
+  }
 `;
 
 const TasksBox = styled.div`
   margin: 0 auto;
   width: 80%;
+
+  @media (max-width: ${mediaQueryMaxWidth}) {
+    width: 100%;
+  }
 `;
 
 const JustTodayBox = styled.div`
