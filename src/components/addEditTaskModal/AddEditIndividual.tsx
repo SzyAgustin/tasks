@@ -39,5 +39,5 @@ const AddEditIndividual = ({
 export default AddEditIndividual;
 
 const SpaceDiv = styled.div`
-  height: 50px;
+  height: 64px;
 `;

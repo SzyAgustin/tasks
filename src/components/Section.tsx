@@ -34,7 +34,9 @@ const Section = ({ title }: Props) => {
             </p>
           </JustTodayBox>
         </div>
-        <AddTaskButton />
+        <div>
+          <AddTaskButton />
+        </div>
       </SectionHeader>
       <TasksBox>{loadingTasks ? <Loading /> : <TaskList />}</TasksBox>
     </SectionBox>

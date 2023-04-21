@@ -63,11 +63,11 @@ const AddSubTaskBox = styled.div`
 `;
 
 const SubTaskInputBox = styled.div`
-  width: 90%;
+  width: calc(100% - 60px);
 `;
 
 const SubTasks = styled.div<DarkModeProps>`
-  height: 150px;
+  height: 120px;
   background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
   overflow-y: scroll;
   ::-webkit-scrollbar {

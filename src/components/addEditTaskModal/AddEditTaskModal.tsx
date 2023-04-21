@@ -62,11 +62,12 @@ interface DarkModeProps {
 
 const ModalContainer = styled.div`
   position: relative;
+  max-height: 100vh;
 `;
 
 const CloseBox = styled.div<DarkModeProps>`
   position: absolute;
-  top: 5%;
+  top: 6%;
   right: 10%;
   width: 30px;
   height: 30px;
@@ -75,6 +76,7 @@ const CloseBox = styled.div<DarkModeProps>`
   align-items: center;
   justify-content: center;
   background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
+  cursor: pointer;
 
   @media (min-width: ${mediaQueryMaxWidth}) {
     visibility: hidden;
@@ -111,6 +113,7 @@ const customStyles = (darkMode: boolean) => ({
     boxShadow: darkMode
       ? '0px 0px 5px 0px rgb(0, 0, 0)'
       : '0px 0px 5px 0px rgb(0, 0, 0, 120)',
+    maxHeight: '100vh',
   },
   overlay: {
     background: '#00000099',
