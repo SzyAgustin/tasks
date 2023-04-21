@@ -69,6 +69,7 @@ export default PeriodicSelection;
 const PeriodicSelectionBox = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   margin-bottom: 10px;
 `;
 
@@ -80,6 +81,7 @@ const DayCheckBox = styled.div<DayCheckBoxProps>`
   transition: 0.2s;
   padding: 6.5px 10px;
   margin-right: 6px;
+  margin-bottom: 2px;
   font-size: 14px;
   border: none;
   border-radius: 4px;
