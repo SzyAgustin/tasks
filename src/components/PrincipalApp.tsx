@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import SearchBar from './SearchBar';
 import { UserContext } from '../context/UserContext';
 import SignIn from './SignIn';
+import { mediaQueryMaxWidth } from './constants';
 
 const PrincipalApp = () => {
   const { darkMode, getTasksSorted } = useContext(AppContext);

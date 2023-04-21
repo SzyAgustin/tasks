@@ -7,6 +7,7 @@ import { AppContext } from '../context/AppContext';
 import { RiRepeatFill } from 'react-icons/ri';
 import { MdOutlineArrowForwardIos } from 'react-icons/md';
 import SubTask from './SubTask';
+import { mediaQueryMaxWidth } from './constants';
 
 interface TaskProps {
   task: ITask;
@@ -105,13 +106,17 @@ interface TaskBoxProps {
 }
 
 const Title = styled.div`
-  width: calc(80%);
+  width: 85%;
   display: flex;
   align-items: center;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   min-width: 0;
+
+  @media (max-width: ${mediaQueryMaxWidth}) {
+    width: 75%;
+  }
 `;
 
 export const TaskBox = styled.div<TaskBoxProps>`

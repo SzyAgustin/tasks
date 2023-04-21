@@ -58,6 +58,7 @@ const SectionBox = styled.div`
 
   @media (max-width: ${mediaQueryMaxWidth}) {
     width: 85%;
+    padding-bottom: 140px;
   }
 `;
 
