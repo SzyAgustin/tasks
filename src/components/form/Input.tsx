@@ -75,17 +75,18 @@ const StyledLabel = styled.label`
 `;
 
 const InputStyled = styled.input<InputProps>`
-  type: 'text';
+  transition: 0.4s;
+  font-size: 14px;
+  width: 95%;
   background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
+  font-size: 16px;
   padding: 0.5em 1em;
   border-radius: 3px;
-  margin-bottom: 3px;
-  user-select: none;
-  border: none;
-  font-size: 16px;
-  color: ${(p) => (p.darkMode ? 'white' : 'black')};
+  border: 0px;
+  color: ${(p) => (p.darkMode ? 'white' : 'rgb(4, 34, 78)')};
 
   &:focus-visible {
+    border: transparent;
     outline: none;
   }
 `;
