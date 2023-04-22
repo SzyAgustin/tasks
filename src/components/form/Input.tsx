@@ -23,13 +23,14 @@ const Input = ({ label, name, ...rest }: InputProps) => {
   return (
     <InputDiv>
       <StyledLabel htmlFor={name}>{label}</StyledLabel>
-      <StyledField
+      {/* <StyledField
         id={name}
         name={name}
         darkMode={darkMode}
         component={MyInput}
         {...rest}
-      ></StyledField>
+      ></StyledField> */}
+      <input type='text'></input>
       <ErrorMessage name={name}>
         {(error) => <TextError>{error}</TextError>}
       </ErrorMessage>
