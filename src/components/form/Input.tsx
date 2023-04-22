@@ -15,7 +15,7 @@ interface MyInputProps {
 }
 
 const MyInput = ({ field, form, ...props }: MyInputProps) => {
-  return <input type='text' {...field} {...form} {...props} />;
+  return <input {...field} {...form} {...props} type='text' />;
 };
 
 const Innput = () => {
