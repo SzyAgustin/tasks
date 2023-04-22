@@ -15,7 +15,8 @@ interface MyInputProps {
 }
 
 const MyInput = ({ field, form, ...props }: MyInputProps) => {
-  return <input {...field} {...form} type='text' />;
+  const { darkMode } = useContext(AppContext);
+  return <InputStyled {...field} {...form} type='text' darkMode={darkMode} />;
 };
 
 const Innput = () => {
@@ -71,4 +72,18 @@ const StyledField = styled(Field)<InputProps>`
 const StyledLabel = styled.label`
   margin-bottom: 2px;
   font-size: 12px;
+`;
+
+const InputStyled = styled.input<InputProps>`
+  transition: 0.4s;
+  font-size: 14px;
+  width: 95%;
+  background-color: transparent;
+  border: 0px;
+  color: ${(p) => (p.darkMode ? 'white' : 'rgb(4, 34, 78)')};
+
+  &:focus-visible {
+    border: transparent;
+    outline: none;
+  }
 `;
