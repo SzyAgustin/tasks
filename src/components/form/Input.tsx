@@ -18,19 +18,23 @@ const MyInput = ({ field, form, ...props }: MyInputProps) => {
   return <input {...field} {...form} {...props} />;
 };
 
+const Innput = () => {
+  return <input type='text' />;
+};
+
 const Input = ({ label, name, ...rest }: InputProps) => {
   const { darkMode } = useContext(AppContext);
   return (
     <InputDiv>
       <StyledLabel htmlFor={name}>{label}</StyledLabel>
-      {/* <StyledField
+      <StyledField
         id={name}
         name={name}
         darkMode={darkMode}
-        component={MyInput}
+        component={Innput}
         {...rest}
-      ></StyledField> */}
-      <input type='text'></input>
+      ></StyledField>
+      <Innput />
       <ErrorMessage name={name}>
         {(error) => <TextError>{error}</TextError>}
       </ErrorMessage>
