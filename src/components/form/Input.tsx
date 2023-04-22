@@ -35,7 +35,7 @@ const Input = ({ label, name, ...rest }: InputProps) => {
         component={MyInput}
         {...rest}
       ></StyledField>
-      <Innput />
+      {/* <Innput /> */}
       <ErrorMessage name={name}>
         {(error) => <TextError>{error}</TextError>}
       </ErrorMessage>
@@ -75,15 +75,17 @@ const StyledLabel = styled.label`
 `;
 
 const InputStyled = styled.input<InputProps>`
-  transition: 0.4s;
-  font-size: 14px;
-  width: 95%;
-  background-color: transparent;
-  border: 0px;
-  color: ${(p) => (p.darkMode ? 'white' : 'rgb(4, 34, 78)')};
+  type: 'text';
+  background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
+  padding: 0.5em 1em;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  user-select: none;
+  border: none;
+  font-size: 16px;
+  color: ${(p) => (p.darkMode ? 'white' : 'black')};
 
   &:focus-visible {
-    border: transparent;
     outline: none;
   }
 `;
