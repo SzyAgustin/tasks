@@ -14,13 +14,9 @@ interface MyInputProps {
   form: any;
 }
 
-const MyInput = ({ field, form, ...props }: MyInputProps) => {
+const MyInput = ({ field, form }: MyInputProps) => {
   const { darkMode } = useContext(AppContext);
   return <InputStyled {...field} {...form} type='text' darkMode={darkMode} />;
-};
-
-const Innput = () => {
-  return <input type='text' />;
 };
 
 const Input = ({ label, name, ...rest }: InputProps) => {
@@ -28,14 +24,13 @@ const Input = ({ label, name, ...rest }: InputProps) => {
   return (
     <InputDiv>
       <StyledLabel htmlFor={name}>{label}</StyledLabel>
-      <StyledField
+      <Field
         id={name}
         name={name}
         darkMode={darkMode}
         component={MyInput}
         {...rest}
-      ></StyledField>
-      {/* <Innput /> */}
+      ></Field>
       <ErrorMessage name={name}>
         {(error) => <TextError>{error}</TextError>}
       </ErrorMessage>
@@ -51,22 +46,6 @@ const InputDiv = styled.div`
   margin-bottom: 10px;
   margin-bottom: 1em;
   min-height: 75px;
-`;
-
-const StyledField = styled(Field)<InputProps>`
-  type: 'text';
-  background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
-  padding: 0.5em 1em;
-  border-radius: 3px;
-  margin-bottom: 3px;
-  user-select: none;
-  border: none;
-  font-size: 16px;
-  color: ${(p) => (p.darkMode ? 'white' : 'black')};
-
-  &:focus-visible {
-    outline: none;
-  }
 `;
 
 const StyledLabel = styled.label`
