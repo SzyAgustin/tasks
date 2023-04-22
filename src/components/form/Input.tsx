@@ -9,6 +9,15 @@ interface InputProps {
   [x: string]: any;
 }
 
+interface MyInputProps {
+  field: any;
+  form: any;
+}
+
+const MyInput = ({ field, form, ...props }: MyInputProps) => {
+  return <input {...field} {...form} {...props} />;
+};
+
 const Input = ({ label, name, ...rest }: InputProps) => {
   const { darkMode } = useContext(AppContext);
   return (
@@ -18,6 +27,7 @@ const Input = ({ label, name, ...rest }: InputProps) => {
         id={name}
         name={name}
         darkMode={darkMode}
+        component={MyInput}
         {...rest}
       ></StyledField>
       <ErrorMessage name={name}>
