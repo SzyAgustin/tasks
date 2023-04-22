@@ -31,10 +31,10 @@ const Input = ({ label, name, ...rest }: InputProps) => {
         id={name}
         name={name}
         darkMode={darkMode}
-        component={Innput}
+        // component={Innput}
         {...rest}
       ></StyledField>
-      <Innput />
+      {/* <Innput /> */}
       <ErrorMessage name={name}>
         {(error) => <TextError>{error}</TextError>}
       </ErrorMessage>
@@ -53,6 +53,7 @@ const InputDiv = styled.div`
 `;
 
 const StyledField = styled(Field)<InputProps>`
+  type: 'text';
   background-color: ${(p) => (p.darkMode ? '#ffffff22' : '#006bae32')};
   padding: 0.5em 1em;
   border-radius: 3px;
