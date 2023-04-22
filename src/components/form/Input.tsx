@@ -15,7 +15,7 @@ interface MyInputProps {
 }
 
 const MyInput = ({ field, form, ...props }: MyInputProps) => {
-  return <input {...field} {...form} {...props} type='text' />;
+  return <input {...props} type='text' />;
 };
 
 const Innput = () => {
@@ -34,7 +34,7 @@ const Input = ({ label, name, ...rest }: InputProps) => {
         component={MyInput}
         {...rest}
       ></StyledField>
-      <Innput />
+      {/* <Innput /> */}
       <ErrorMessage name={name}>
         {(error) => <TextError>{error}</TextError>}
       </ErrorMessage>
