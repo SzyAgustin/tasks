@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import SearchBar from './SearchBar';
 import { UserContext } from '../context/UserContext';
 import SignIn from './SignIn';
-import { mediaQueryMaxWidth } from './constants';
 
 const PrincipalApp = () => {
   const { darkMode, getTasksSorted } = useContext(AppContext);
@@ -27,9 +26,7 @@ const PrincipalApp = () => {
             <DarkMode />
           </>
         ) : (
-          <SignInBox>
-            <SignIn />
-          </SignInBox>
+          <SignIn />
         )}
       </AppBox>
     </Box>
@@ -56,10 +53,4 @@ const AppBox = styled.div<AppBoxProps>`
   height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
-`;
-
-const SignInBox = styled.div`
-  display: flex;
-  align-items: center;
-  height: calc(75vh - 80px);
 `;

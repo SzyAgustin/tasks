@@ -1,9 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import Modal from 'react-modal';
 import { AppContext } from '../../context/AppContext';
 import styled from 'styled-components';
 import AddEditForm from './AddEditForm';
-import Tabs from './Tabs';
 import { mediaQueryMaxWidth } from '../constants';
 import { GrFormClose } from 'react-icons/gr';
 import { IconContext } from 'react-icons/lib';
